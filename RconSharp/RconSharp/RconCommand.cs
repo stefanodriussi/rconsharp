@@ -28,7 +28,7 @@ using System.Text;
 
 namespace RconSharp
 {
-	public class RconCommand
+	public abstract class RconCommand
 	{
 	}
 }
