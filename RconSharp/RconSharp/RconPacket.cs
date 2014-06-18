@@ -25,10 +25,47 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using RconSharp.Extensions;
 
 namespace RconSharp
 {
-	public abstract class RconCommand
+	public class RconPacket
 	{
+		private const int sizeIndex = 0;
+		private const int idIndex = 4;
+		private const int typeIndex = 8;
+		private const int bodyIndex = 12;
+		private string _body;
+		public RconPacket(PacketType type, string content)
+		{
+			if (type == null)
+				throw new ArgumentException("Error: type parameter must not be null");
+
+			Type = type;
+			_body = content ?? string.Empty;
+			Id = Environment.TickCount;
+		}
+		
+		public int Size
+		{
+			get { return _body.Length + 10; }
+		}
+		public int Id { get; set; }
+		public PacketType Type { get; internal set; }
+		public string Body
+		{
+			get { return _body; }
+		}
+
+		public byte[] GetBytes()
+		{
+			byte[] buffer = new byte[Size + 4];
+			Size.ToLittleEndian().CopyTo(buffer, sizeIndex);
+			Id.ToLittleEndian().CopyTo(buffer, idIndex);
+			Type.Value.ToLittleEndian().CopyTo(buffer, typeIndex);
+			Encoding.UTF8.GetBytes(Body).CopyTo(buffer, bodyIndex);
+			return buffer;
+		}
 	}
 }

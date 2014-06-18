@@ -51,7 +51,14 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CoreTests.cs" />
+    <Compile Include="EndianTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RconSharp\RconSharp.csproj">
+      <Project>{e85eb942-10e7-48be-ac33-f82bad5f45d9}</Project>
+      <Name>RconSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

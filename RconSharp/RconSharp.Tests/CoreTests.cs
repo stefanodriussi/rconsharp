@@ -29,6 +29,49 @@ namespace RconSharp.Tests
 	[TestClass]
 	public class CoreTests
 	{
+		[TestCategory("Packets")]
+		[TestMethod]
+		public void BuildPacket()
+		{ 
+			// Prepare
+			var packet = new RconPacket(PacketType.Auth, "password");
 
+			// Act
+			var buffer = packet.GetBytes();
+
+			// Asert
+			Assert.IsNotNull(buffer);
+			Assert.IsTrue(buffer.Length == 22);  // 14 fixed bytes + 8 bytes for "password" string encoding
+			Assert.IsTrue(buffer[0] == 0x12);
+			Assert.IsTrue(buffer[buffer.Length - 1] == 0x00 && buffer[buffer.Length - 2] == 0x00);
+		}
+
+		[TestCategory("Packets")]
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentException))]
+		public void BuildPacketWithoutType()
+		{
+			// Prepare
+			var packet = new RconPacket(null, "password");
+
+			// Act
+			var buffer = packet.GetBytes();
+		}
+
+		[TestCategory("Packets")]
+		[TestMethod]
+		public void BuildPacketWithEmptyContent()
+		{
+			// Prepare
+			var packet = new RconPacket(PacketType.Auth, string.Empty);
+
+			// Act
+			var buffer = packet.GetBytes();
+
+			// Asert
+			Assert.IsNotNull(buffer);
+			Assert.IsTrue(buffer.Length == 14);  // 14 fixed bytes
+			Assert.IsTrue(buffer[buffer.Length - 1] == 0x00 && buffer[buffer.Length - 2] == 0x00);
+		}
 	}
 }

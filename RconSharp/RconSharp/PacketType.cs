@@ -21,14 +21,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RconSharp
 {
-	public class RconAnswer
+	public class PacketType
 	{
+		public int Value { get; internal set; }
+		public string ProtocolName { get; internal set; }
+
+		public static PacketType Auth = new PacketType() { ProtocolName = "SERVERDATA_AUTH", Value = 3 };
+		public static PacketType AuthResponse = new PacketType() { ProtocolName = "SERVERDATA_AUTH_RESPONSE", Value = 2 };
+		public static PacketType ExecCommand = new PacketType() { ProtocolName = "SERVERDATA_EXECCOMMAND", Value = 2 };
+		public static PacketType ResponseValue = new PacketType() { ProtocolName = "SERVERDATA_RESPONSE_VALUE", Value = 0 };
 	}
 }

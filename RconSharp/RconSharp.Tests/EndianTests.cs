@@ -22,24 +22,55 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using RconSharp.Extensions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace RconSharp
+namespace RconSharp.Tests
 {
-	public class RconMessenger
+	[TestClass]
+	public class EndianTests
 	{
-		private INetworkSocket _socket;
-
-		public RconMessenger(INetworkSocket socket)
+		[TestCategory("Little Endian Conversion")]
+		[TestMethod]
+		public void ConvertIntToLittleEndian()
 		{
-			_socket = socket;
+			// Prepare
+			int value = 17;
+
+			// Act
+			byte[] bytes = value.ToLittleEndian();
+
+			// Assert
+			Assert.IsTrue(bytes.Length == 4);
+			Assert.IsTrue(bytes[0] == 0x11);
 		}
 
-		public bool Authenticate(string password)
+		[TestCategory("Little Endian Conversion")]
+		[TestMethod]
+		public void ConvertLittleEndianToInt()
 		{
-			throw new NotImplementedException();
+			// Prepare
+			byte[] bytes = new byte[] { 0x11, 0x00, 0x00, 0x00 };
+
+			// Act
+			int value = bytes.ToInt32(0);
+
+			// Assert
+			Assert.AreEqual(value, 17);
+		}
+
+		[TestCategory("Little Endian Conversion")]
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentException))]
+		public void ConvertLittleEndianToIntInvalidInput()
+		{
+			// Prepare
+			byte[] bytes = new byte[] { 0x11, 0x00, 0x00 };
+
+			// Act
+			int value = bytes.ToInt32(0);
+
+			// Assert
 		}
 	}
 }
