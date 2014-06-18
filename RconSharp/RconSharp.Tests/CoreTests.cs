@@ -1,4 +1,7 @@
-﻿/*
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+
+/*
 The MIT License (MIT)
 
 Copyright (c) 2014 Stefano Driussi
@@ -21,8 +24,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RconSharp.Tests
 {

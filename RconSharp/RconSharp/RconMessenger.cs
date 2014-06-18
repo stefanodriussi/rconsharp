@@ -1,4 +1,6 @@
-﻿/*
+﻿using System;
+
+/*
 The MIT License (MIT)
 
 Copyright (c) 2014 Stefano Driussi
@@ -21,22 +23,31 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RconSharp
 {
+	/// <summary>
+	/// Rcon protocol messages handler
+	/// </summary>
 	public class RconMessenger
 	{
 		private INetworkSocket _socket;
 
+		/// <summary>
+		/// Class constructor
+		/// </summary>
+		/// <param name="socket">Socket interface</param>
+		/// <remarks>Since this is a Portable Class Library, there's not a concrete implementation of the Socket class</remarks>
 		public RconMessenger(INetworkSocket socket)
 		{
 			_socket = socket;
 		}
 
+		/// <summary>
+		/// Send the proper authentication packet and parse the response
+		/// </summary>
+		/// <param name="password">Current server password</param>
+		/// <returns>True if the connection has been authenticated; False elsewhere</returns>
 		public bool Authenticate(string password)
 		{
 			throw new NotImplementedException();

@@ -1,4 +1,8 @@
-﻿/*
+﻿using RconSharp.Extensions;
+using System;
+using System.Text;
+
+/*
 The MIT License (MIT)
 
 Copyright (c) 2014 Stefano Driussi
@@ -21,15 +25,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using RconSharp.Extensions;
 
 namespace RconSharp
 {
+	/// <summary>
+	/// RCON Packet implementation
+	/// </summary>
 	public class RconPacket
 	{
 		private const int sizeIndex = 0;
@@ -37,6 +38,12 @@ namespace RconSharp
 		private const int typeIndex = 8;
 		private const int bodyIndex = 12;
 		private string _body;
+
+		/// <summary>
+		/// Class constructor
+		/// </summary>
+		/// <param name="type">Packet Type</param>
+		/// <param name="content">Packet content</param>
 		public RconPacket(PacketType type, string content)
 		{
 			if (type == null)
@@ -47,17 +54,38 @@ namespace RconSharp
 			Id = Environment.TickCount;
 		}
 		
+		/// <summary>
+		/// Gets the packet size according to RCON Protocol
+		/// </summary>
+		/// <remarks>This value is equal to 10 (fixed bytes) + body lenght. The 4 bytes for the Size field are not added</remarks>
 		public int Size
 		{
 			get { return _body.Length + 10; }
 		}
+
+		/// <summary>
+		/// Gets or Sets the packet id
+		/// </summary>
+		/// <remarks>This value can be set to any integer. By default is set to the current Environment.TickCount property</remarks>
 		public int Id { get; set; }
+
+		/// <summary>
+		/// Gets the Packet Type
+		/// </summary>
 		public PacketType Type { get; internal set; }
+
+		/// <summary>
+		/// Gets the Packet body
+		/// </summary>
 		public string Body
 		{
 			get { return _body; }
 		}
 
+		/// <summary>
+		/// Gets the bytes composing this Packet as defined in RCON Protocol
+		/// </summary>
+		/// <returns></returns>
 		public byte[] GetBytes()
 		{
 			byte[] buffer = new byte[Size + 4];
