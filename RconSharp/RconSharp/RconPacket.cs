@@ -99,8 +99,18 @@ namespace RconSharp
 			return buffer;
 		}
 
+		/// <summary>
+		/// Create a new RconPacket from a byte array
+		/// </summary>
+		/// <param name="buffer">Input buffer</param>
+		/// <returns>Parsed RconPacket</returns>
+		/// <exception cref="System.ArgumentException">When buffer is null or its size is less than 14</exception>
 		public static RconPacket FromBytes(byte[] buffer)
 		{
+			if (buffer == null || buffer.Length < 14)
+			{
+				throw new ArgumentException("Invalid packet");
+			}
 			RconPacket packet = new RconPacket()
 			{
 				Body = Encoding.UTF8.GetString(buffer, bodyIndex, buffer.ToInt32(sizeIndex) - 10),
