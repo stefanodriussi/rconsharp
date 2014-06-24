@@ -53,6 +53,8 @@ namespace RconSharp
 			_body = content ?? string.Empty;
 			Id = Environment.TickCount;
 		}
+
+		private RconPacket() { }
 		
 		/// <summary>
 		/// Gets the packet size according to RCON Protocol
@@ -80,6 +82,7 @@ namespace RconSharp
 		public string Body
 		{
 			get { return _body; }
+			private set { _body = value; }
 		}
 
 		/// <summary>
@@ -94,6 +97,16 @@ namespace RconSharp
 			Type.Value.ToLittleEndian().CopyTo(buffer, typeIndex);
 			Encoding.UTF8.GetBytes(Body).CopyTo(buffer, bodyIndex);
 			return buffer;
+		}
+
+		public static RconPacket FromBytes(byte[] buffer)
+		{
+			RconPacket packet = new RconPacket()
+			{
+				Body = Encoding.UTF8.GetString(buffer, bodyIndex, buffer.ToInt32(sizeIndex) - 10),
+				Id = buffer.ToInt32(idIndex)
+			};
+			return packet;
 		}
 	}
 }

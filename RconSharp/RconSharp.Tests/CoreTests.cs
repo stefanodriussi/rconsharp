@@ -74,5 +74,21 @@ namespace RconSharp.Tests
 			Assert.IsTrue(buffer.Length == 14);  // 14 fixed bytes
 			Assert.IsTrue(buffer[buffer.Length - 1] == 0x00 && buffer[buffer.Length - 2] == 0x00);
 		}
+
+		[TestCategory("Packets")]
+		[TestMethod]
+		public void BuildPacketFromBytes()
+		{ 
+			// Prepare
+			var originalPacket = new RconPacket(PacketType.Auth, "password");
+
+			// Act
+			var buffer = originalPacket.GetBytes();
+			var parsedPacket = RconPacket.FromBytes(buffer);
+
+			// Assert
+			Assert.IsTrue(parsedPacket.Body.Equals(originalPacket.Body));
+			Assert.IsTrue(parsedPacket.Id.Equals(originalPacket.Id));
+		}
 	}
 }
