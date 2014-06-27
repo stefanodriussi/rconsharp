@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 /*
 The MIT License (MIT)
@@ -48,7 +49,7 @@ namespace RconSharp
 		/// </summary>
 		/// <param name="password">Current server password</param>
 		/// <returns>True if the connection has been authenticated; False elsewhere</returns>
-		public bool Authenticate(string password)
+		public async Task<bool> Authenticate(string password)
 		{
 			throw new NotImplementedException();
 		}

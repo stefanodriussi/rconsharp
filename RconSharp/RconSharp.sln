@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp", "RconSharp\Rcon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp.Tests", "RconSharp.Tests\RconSharp.Tests.csproj", "{8A325B86-C967-40C7-B9A8-8A8504BA642E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp.Net45", "RconSharp.Net45\RconSharp.Net45.csproj", "{3714B98E-C587-41E3-8840-8766F40A5EF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8A325B86-C967-40C7-B9A8-8A8504BA642E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A325B86-C967-40C7-B9A8-8A8504BA642E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A325B86-C967-40C7-B9A8-8A8504BA642E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
