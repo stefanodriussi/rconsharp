@@ -1,6 +1,6 @@
 # rconsharp
 
-rconsharp is a Valve RCON protocol implementation for .NET written in C#
+rconsharp is a Valve RCON (https://developer.valvesoftware.com/wiki/Source_RCON_Protocol) protocol implementation for .NET written in C#
 
 ## Usage
 
