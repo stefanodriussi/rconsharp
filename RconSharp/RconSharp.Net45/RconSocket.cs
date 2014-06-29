@@ -40,9 +40,19 @@ namespace RconSharp.Net45
 		/// <summary>
 		/// Class constructor
 		/// </summary>
-		/// <param name="host">Remote host address</param>
-		/// <param name="port">Remote host port</param>
-		public RconSocket(string host, int port)
+		public RconSocket()
+		{
+
+		}
+
+		/// <summary>
+		/// Connect the socket to the remote endpoint
+		/// </summary>
+		/// <param name="host">remote host address</param>
+		/// <param name="port">remote host port</param>
+		/// <returns>True if the connection was successfully; False if the connection is already estabilished</returns>
+		/// <exception cref="ARgumentException">is thrown when host parameter is null or empty, or when port parameter value is less than 1</exception>
+		public async Task<bool> ConnectAsync(string host, int port)
 		{
 			if (string.IsNullOrEmpty(host))
 				throw new ArgumentException("Invalid host name: must be a non null non empty string containing the host's address");
@@ -50,16 +60,6 @@ namespace RconSharp.Net45
 			if (port < 1)
 				throw new ArgumentException("Port parameter must be a positive value");
 
-			_host = host;
-			_port = port;
-		}
-
-		/// <summary>
-		/// Connect the socket to the remote endpoint
-		/// </summary>
-		/// <returns>True if the connection was successfully; False if the connection is already estabilished</returns>
-		public async Task<bool> ConnectAsync()
-		{
 			if (_client == null)
 				_client = new TcpClient(AddressFamily.InterNetwork);
 
@@ -110,6 +110,7 @@ namespace RconSharp.Net45
 			if (_client != null && _client.Connected)
 			{
 				_client.Close();
+				_client = null;
 			}
 		}
 

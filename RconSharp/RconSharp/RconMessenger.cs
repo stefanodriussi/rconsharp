@@ -47,6 +47,20 @@ namespace RconSharp
 		}
 
 		/// <summary>
+		/// Connect the socket to the remote endpoint
+		/// </summary>
+		/// <param name="host">remote host address</param>
+		/// <param name="port">remote host port</param>
+		/// <returns>True if the connection was successfully; False if the connection is already estabilished</returns>
+		public async Task<bool> ConnectAsync(string host, int port)
+		{
+			if (!_socket.IsConnected)
+				return await _socket.ConnectAsync(host, port);
+			else
+				return false;
+		}
+
+		/// <summary>
 		/// Send the proper authentication packet and parse the response
 		/// </summary>
 		/// <param name="password">Current server password</param>
@@ -57,9 +71,6 @@ namespace RconSharp
 		{
 			if (string.IsNullOrEmpty(password))
 				throw new ArgumentException("password parameter must be a non null non empty string");
-
-			if (!_socket.IsConnected)
-				await _socket.ConnectAsync();
 
 			var authPacket = new RconPacket(PacketType.Auth, password);
 			var response = await _socket.SendDataAndReadResponseAsync(authPacket.GetBytes());

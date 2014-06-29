@@ -116,7 +116,7 @@ namespace RconSharp.Tests
 		private RconMessenger SetupMessenger(byte[] fakeResponse, bool isConnected)
 		{
 			Mock<INetworkSocket> socket = new Mock<INetworkSocket>();
-			socket.Setup(s => s.ConnectAsync()).ReturnsAsync(true);
+			socket.Setup(s => s.ConnectAsync(It.IsAny<string>(), It.IsAny<int>())).ReturnsAsync(true);
 			socket.Setup(s => s.SendDataAndReadResponseAsync(It.IsAny<byte[]>())).ReturnsAsync(fakeResponse);
 			socket.SetupGet<bool>(s => s.IsConnected).Returns(isConnected);
 			return new RconMessenger(socket.Object);

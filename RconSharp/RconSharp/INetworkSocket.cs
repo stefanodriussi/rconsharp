@@ -35,8 +35,10 @@ namespace RconSharp
 		/// <summary>
 		/// Connect the socket to the remote endpoint
 		/// </summary>
+		/// <param name="host">remote host address</param>
+		/// <param name="port">remote host port</param>
 		/// <returns>True if the connection was successfully; False if the connection is already estabilished</returns>
-		Task<bool> ConnectAsync();
+		Task<bool> ConnectAsync(string host, int port);
 		/// <summary>
 		/// Close the connection to the remote endpoint
 		/// </summary>
