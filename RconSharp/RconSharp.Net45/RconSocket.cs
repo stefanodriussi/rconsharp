@@ -1,18 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
+
+/*
+The MIT License (MIT)
+
+Copyright (c) 2014 Stefano Driussi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 namespace RconSharp.Net45
 {
+	/// <summary>
+	/// .NET 4.5 implementation of <see cref="INetworkSocket"/> interface
+	/// </summary>
 	public class RconSocket : INetworkSocket
 	{
 		private TcpClient _client;
 		private string _host;
 		private int _port;
 
+		/// <summary>
+		/// Class constructor
+		/// </summary>
+		/// <param name="host">Remote host address</param>
+		/// <param name="port">Remote host port</param>
 		public RconSocket(string host, int port)
 		{
 			if (string.IsNullOrEmpty(host))
@@ -25,6 +54,10 @@ namespace RconSharp.Net45
 			_port = port;
 		}
 
+		/// <summary>
+		/// Connect the socket to the remote endpoint
+		/// </summary>
+		/// <returns>True if the connection was successfully; False if the connection is already estabilished</returns>
 		public async Task<bool> ConnectAsync()
 		{
 			if (_client == null)
@@ -37,11 +70,19 @@ namespace RconSharp.Net45
 			return true;
 		}
 
+		/// <summary>
+		/// Gets whether the connection is opened or not
+		/// </summary>
 		public bool IsConnected
 		{
 			get { return _client == null ? false : _client.Connected; }
 		}
 
+		/// <summary>
+		/// Send a Rcon command to the remote server
+		/// </summary>
+		/// <param name="data">Rcon command data</param>
+		/// <returns>The response to the command sent</returns>
 		public async Task<byte[]> SendDataAndReadResponseAsync(byte[] data)
 		{
 			if (!IsConnected)
@@ -61,7 +102,9 @@ namespace RconSharp.Net45
 			return result;
 		}
 
-
+		/// <summary>
+		/// Close the connection to the remote endpoint
+		/// </summary>
 		public void CloseConnection()
 		{
 			if (_client != null && _client.Connected)

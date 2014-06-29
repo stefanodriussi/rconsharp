@@ -51,6 +51,8 @@ namespace RconSharp
 		/// </summary>
 		/// <param name="password">Current server password</param>
 		/// <returns>True if the connection has been authenticated; False elsewhere</returns>
+		/// <remarks>This method must be called prior to sending any other command</remarks>
+		/// <exception cref="ArgumentException">Is thrown if <paramref name="password"/> parameter is null or empty</exception>
 		public async Task<bool> AuthenticateAsync(string password)
 		{
 			if (string.IsNullOrEmpty(password))
@@ -65,6 +67,13 @@ namespace RconSharp
 			return responsePacket.Id != -1;
 		}
 
+		/// <summary>
+		/// Send a command encapsulated into an Rcon message packet and get the response
+		/// </summary>
+		/// <param name="command">Command to be executed</param>
+		/// <returns>The response to this command</returns>
+		/// <exception cref="ArgumentException">Is thrown if <paramref name="command"/> parameter is null or empty</exception>
+		/// <exception cref="InvalidOperationException">Is thrown if the connection is not properly opened and authenticated</exception>
 		public async Task<string> ExecuteCommandAsync(string command)
 		{
 			if (string.IsNullOrEmpty(command))
@@ -79,6 +88,9 @@ namespace RconSharp
 			return responsePacket.Body;
 		}
 
+		/// <summary>
+		/// Close the remote connection
+		/// </summary>
 		public void CloseConnection()
 		{
 			_socket.CloseConnection();
