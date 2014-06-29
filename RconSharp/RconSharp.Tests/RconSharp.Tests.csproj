@@ -59,10 +59,6 @@
     <Compile Include="RconMessengerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RconSharp.Net45\RconSharp.Net45.csproj">
-      <Project>{3714b98e-c587-41e3-8840-8766f40a5ef6}</Project>
-      <Name>RconSharp.Net45</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RconSharp\RconSharp.csproj">
       <Project>{e85eb942-10e7-48be-ac33-f82bad5f45d9}</Project>
       <Name>RconSharp</Name>
