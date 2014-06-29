@@ -5,7 +5,7 @@ Due to the nature of PCLs it's not possible to have a common implementation of a
 
 ## Dependencies
 
-All the dependencies withing this project are referenced as NuGet packages and will be restored upon first build (if you have this option enabled NuGet settings).
+All the dependencies within this project are referenced as NuGet packages and will be restored upon first build (if you have this option enabled NuGet settings).
 Following is the list of referenced packages:
 * Microsoft Async
 * Microsoft BCL Build Components
