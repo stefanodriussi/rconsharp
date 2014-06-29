@@ -9,12 +9,17 @@ Due to the shared structure of PCLs it's not possible to have a common implement
 
 ## Quick example
 
+This is a very basic snippet that allows you to forward commands to a Rcon enabled remote server.
+
 ```
 // create an instance of the socket. In this case i've used the .Net 4.5 object defined in the project
-INetworkSocket socket = new RconSocket("remotehost", 12345);
+INetworkSocket socket = new RconSocket();
 
 // create the RconMessenger instance and inject the socket
 RconMessenger messenger = new RconMessenger(socket);
+
+// initiate the connection with the remote server
+bool isConnected = await messenger.ConnectAsync("remotehost", 12345);
 
 // try to authenticate with your supersecretpassword (... obviously this is my hackerproof key, you shoul use yours)
 bool authenticated = await messenger.AuthenticateAsync("supersecretpassword");
@@ -26,6 +31,7 @@ if (authenticated)
 }
 ```
 
+Note: rconsharp is designed to work with the `async/await` paradigm. Nothing to be afraid of but remember you have to mark the encapsulating method with the `async` keyword. Refer to the [official documentation](http://msdn.microsoft.com/en-us/library/hh191443.aspx) if you wish to learn more on the subject.
 ### Dependencies
 
 All the dependencies within this project are referenced as NuGet packages and will be restored upon first build (if you have this option enabled NuGet settings).
