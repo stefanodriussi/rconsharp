@@ -1,20 +1,11 @@
 # rconsharp
 
 rconsharp is a [Valve RCON](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol) protocol implementation for .NET written in C# as a Portable Class Library (PCL).
-Due to the nature of PCLs it's not possible to have a common implementation of a network socket and due to this fact, a concrete class to handle network communication will be needed for each platform you need to target.
-
-## Dependencies
-
-All the dependencies within this project are referenced as NuGet packages and will be restored upon first build (if you have this option enabled NuGet settings).
-Following is the list of referenced packages:
-* Microsoft Async
-* Microsoft BCL Build Components
-* Microsoft BCL Portability Pack
-* Moq
 
 ## Usage
 
 Clone this repository and build the solution to get the assemblies. At this point of time, you can either reference the PCL and provide your custom implementation of `INetworkSocket` or reference the other projects (right now only .Net 4.5 is implemented).
+Due to the shared structure of PCLs it's not possible to have a common implementation of a network socket and this is the reason why a concrete class to handle network communication will be needed for each platform you need to target.
 
 ## Quick example
 
@@ -34,6 +25,15 @@ if (authenticated)
   var response = messenger.ExecuteCommandAsync("/help");
 }
 ```
+
+### Dependencies
+
+All the dependencies within this project are referenced as NuGet packages and will be restored upon first build (if you have this option enabled NuGet settings).
+Following is the list of referenced packages:
+* Microsoft Async
+* Microsoft BCL Build Components
+* Microsoft BCL Portability Pack
+* Moq
 
 ## Licensing
 
