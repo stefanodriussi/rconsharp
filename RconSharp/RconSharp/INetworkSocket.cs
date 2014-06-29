@@ -28,6 +28,9 @@ namespace RconSharp
 {
 	public interface INetworkSocket
 	{
-		Task<byte[]> SendData(byte[] buffer);
+		Task<bool> ConnectAsync();
+		void CloseConnection();
+		Task<byte[]> SendDataAndReadResponseAsync(byte[] data);
+		bool IsConnected { get; }
 	}
 }

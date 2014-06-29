@@ -41,6 +41,8 @@ namespace RconSharp
 		/// <remarks>Since this is a Portable Class Library, there's not a concrete implementation of the Socket class</remarks>
 		public RconMessenger(INetworkSocket socket)
 		{
+			if (socket == null)
+				throw new NullReferenceException("Socket parameter must be an instance of a class implementing INetworkSocket inteface");
 			_socket = socket;
 		}
 
@@ -49,9 +51,37 @@ namespace RconSharp
 		/// </summary>
 		/// <param name="password">Current server password</param>
 		/// <returns>True if the connection has been authenticated; False elsewhere</returns>
-		public async Task<bool> Authenticate(string password)
+		public async Task<bool> AuthenticateAsync(string password)
 		{
-			throw new NotImplementedException();
+			if (string.IsNullOrEmpty(password))
+				throw new ArgumentException("password parameter must be a non null non empty string");
+
+			if (!_socket.IsConnected)
+				await _socket.ConnectAsync();
+
+			var authPacket = new RconPacket(PacketType.Auth, password);
+			var response = await _socket.SendDataAndReadResponseAsync(authPacket.GetBytes());
+			var responsePacket = RconPacket.FromBytes(response);
+			return responsePacket.Id != -1;
+		}
+
+		public async Task<string> ExecuteCommandAsync(string command)
+		{
+			if (string.IsNullOrEmpty(command))
+				throw new ArgumentException("command parameter must be a non null non empty string");
+
+			if (!_socket.IsConnected)
+				throw new InvalidOperationException("You must authenticate the connection before sending any command to the server");
+
+			var commandPacket = new RconPacket(PacketType.ExecCommand, command);
+			var response = await _socket.SendDataAndReadResponseAsync(commandPacket.GetBytes());
+			var responsePacket = RconPacket.FromBytes(response);
+			return responsePacket.Body;
+		}
+
+		public void CloseConnection()
+		{
+			_socket.CloseConnection();
 		}
 	}
 }
