@@ -14,14 +14,25 @@ Following is the list of referenced packages:
 
 ## Usage
 
-```
-TODO: fill this part
-```
+Clone this repository and build the solution to get the assemblies. At this point of time, you can either reference the PCL and provide your custom implementation of `INetworkSocket` or reference the other projects (right now only .Net 4.5 is implemented).
 
 ## Quick example
 
 ```
-TODO: fill this part
+// create an instance of the socket. In this case i've used the .Net 4.5 object defined in the project
+INetworkSocket socket = new RconSocket("remotehost", 12345);
+
+// create the RconMessenger instance and inject the socket
+RconMessenger messenger = new RconMessenger(socket);
+
+// try to authenticate with your supersecretpassword (... obviously this is my hackerproof key, you shoul use yours)
+bool authenticated = await messenger.AuthenticateAsync("supersecretpassword");
+if (authenticated)
+{
+  // if we fall here, we're good to go! from this point on the connection is authenticated and you can send commands 
+  // to the server
+  var response = messenger.ExecuteCommandAsync("/help");
+}
 ```
 
 ## Licensing
