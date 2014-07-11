@@ -63,5 +63,26 @@ namespace SimpleRconClient.ViewModel.Runtime
 		{
 			get { throw new NotImplementedException(); }
 		}
+
+
+		public System.Windows.Input.ICommand DisconnectCommand
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public System.Windows.Input.ICommand ClearLogsCommand
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public bool IsWorking
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public bool IsConnected
+		{
+			get { throw new NotImplementedException(); }
+		}
 	}
 }

@@ -11,7 +11,11 @@ namespace SimpleRconClient.ViewModel
 		int Port { get; set; }
 		string Password { get; set; }
 		ICommand ConnectCommand { get; }
+		ICommand DisconnectCommand { get; }
 		ICommand ExecuteCommand { get; }
+		ICommand ClearLogsCommand { get; }
+		bool IsWorking { get; }
+		bool IsConnected { get; }
 		string MessageBody { get; }
 		IEnumerable<CommunicationChunk> CommunicationChunks { get; }
 	}
