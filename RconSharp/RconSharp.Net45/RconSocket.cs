@@ -34,8 +34,6 @@ namespace RconSharp.Net45
 	public class RconSocket : INetworkSocket
 	{
 		private TcpClient _client;
-		private string _host;
-		private int _port;
 
 		/// <summary>
 		/// Class constructor
@@ -51,7 +49,7 @@ namespace RconSharp.Net45
 		/// <param name="host">remote host address</param>
 		/// <param name="port">remote host port</param>
 		/// <returns>True if the connection was successfully; False if the connection is already estabilished</returns>
-		/// <exception cref="ARgumentException">is thrown when host parameter is null or empty, or when port parameter value is less than 1</exception>
+		/// <exception cref="ArgumentException">is thrown when host parameter is null or empty, or when port parameter value is less than 1</exception>
 		public async Task<bool> ConnectAsync(string host, int port)
 		{
 			if (string.IsNullOrEmpty(host))
@@ -66,7 +64,7 @@ namespace RconSharp.Net45
 			if (_client.Connected)
 				return false;
 
-			await _client.ConnectAsync(_host, _port);
+			await _client.ConnectAsync(host, port);
 			return true;
 		}
 
