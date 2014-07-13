@@ -1,8 +1,45 @@
-﻿<controls:MetroWindow  x:Class="SimpleRconClient.MainWindow"
+﻿<controls:MetroWindow
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        Title="MainWindow" Height="857" Width="566" DataContext="{Binding Main, Mode=OneWay, Source={StaticResource Locator}}">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"  x:Class="SimpleRconClient.MainWindow"
+        Title="MainWindow" Height="796" Width="550" Background="{DynamicResource ImageBrush1}">
+	<controls:MetroWindow.Resources>
+		<Style TargetType="{x:Type Image}">
+			<Style.Triggers>
+				<Trigger Property="Name" Value="PART_Icon">
+					<Setter Property="Width"  Value="35"/>
+					<Setter Property="Height"  Value="35"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+		<ImageBrush x:Key="ImageBrush1" ImageSource="Assets/miniprewiew.png"/>
+		<DataTemplate x:Key="LogDataTemplate">
+			<StackPanel Background="#AFECECEC" Height="Auto" Margin="10" >
+				<Grid Height="Auto" Margin="10,10,10,0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="36"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+					<Image Height="32" Margin="0" Source="Assets/face2.png" Stretch="Fill" Grid.Column="0" Width="32" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+					<TextBlock TextWrapping="Wrap" Text="{Binding MessageSent, StringFormat=\{0:G\} &gt;&gt;}" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Column="1" VerticalAlignment="Top" Foreground="#FF2991E8"/>
+					<TextBlock TextWrapping="Wrap" Margin="10,25,0,0" Text="{Binding Message}" Grid.ColumnSpan="1" Grid.Column="1"><Run Text="TextBlock"/></TextBlock>
+				</Grid>
+				<Grid Height="Auto" Margin="10,20,10,10">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="36"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<TextBlock TextWrapping="Wrap" Text="{Binding ResponseReceived, StringFormat=\{0:G\} &lt;&lt;}" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Column="1" VerticalAlignment="Top" Foreground="#FF6E3BC7"><Run Text="TextBlock"/></TextBlock>
+					<TextBlock TextWrapping="Wrap" Text="{Binding Response}" Margin="10,25,0,0" Grid.ColumnSpan="1" Grid.Column="1" VerticalAlignment="Top"/>
+					<Image Height="32" Margin="0" Source="Assets/face1.png" Stretch="Fill" Grid.Column="0" Width="32" VerticalAlignment="Top"/>
+				</Grid>
+			</StackPanel>
+		</DataTemplate>
+	</controls:MetroWindow.Resources>
+	<controls:MetroWindow.DataContext>
+		<Binding Mode="OneWay" Path="Main" Source="{StaticResource Locator}"/>
+	</controls:MetroWindow.DataContext>
 	<controls:MetroWindow.IconTemplate>
 		<DataTemplate>
 			<Grid 
@@ -14,24 +51,34 @@
 			</Grid>
 		</DataTemplate>
 	</controls:MetroWindow.IconTemplate>
-	<controls:MetroWindow.Resources>
-		<Style TargetType="{x:Type Image}">
-			<Style.Triggers>
-				<Trigger Property="Name" Value="PART_Icon">
-					<Setter Property="Width"  Value="35"></Setter>
-					<Setter Property="Height"  Value="35"></Setter>
-				</Trigger>
-			</Style.Triggers>
-		</Style>
-	</controls:MetroWindow.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="681*"/>
 			<RowDefinition Height="145*"/>
 		</Grid.RowDefinitions>
-		<Image Source="Assets/miniprewiew.png" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top" Width="558" Height="827" Margin="0,0,-8,-1" Grid.RowSpan="2"/>
-		<TextBox HorizontalAlignment="Left" Height="72" TextWrapping="Wrap" VerticalAlignment="Top" Width="417" Margin="32,36,0,0" Grid.Row="1"/>
-		<controls:Tile Content="Tile" HorizontalAlignment="Left" Margin="454,36,0,0" Grid.Row="1" VerticalAlignment="Top" Height="72" Width="72"/>
+		<TextBox HorizontalAlignment="Left" Height="72" TextWrapping="Wrap" VerticalAlignment="Top" Width="328" Margin="30,36,0,0" Grid.Row="1" Background="#D8FFFFFF"/>
+		<controls:Tile HorizontalAlignment="Right" Margin="0,36,30,0" Grid.Row="1" VerticalAlignment="Top" Height="72" Width="72" Title="clear" Command="{Binding ClearLogsCommand, Mode=OneWay}" Background="#CCDA8811">
+			<Image Source="Assets/tnt.png" Stretch="Fill" Width="30" Height="30" Margin="0,0,0,18"/>
+		</controls:Tile>
+		<Ellipse HorizontalAlignment="Left" Height="25" Margin="39,585.666,0,0" VerticalAlignment="Top" Width="473">
+			<Ellipse.Fill>
+				<RadialGradientBrush>
+					<GradientStop Color="#B72B2B2B" Offset="0"/>
+					<GradientStop Offset="1" Color="#003E3E3E"/>
+				</RadialGradientBrush>
+			</Ellipse.Fill>
+		</Ellipse>
+		<ScrollViewer Margin="30,60,30,45" >
+			<ItemsControl ItemsSource="{Binding CommunicationChunks}" ItemTemplate="{DynamicResource LogDataTemplate}">
+				<ItemsControl.Background>
+					<ImageBrush ImageSource="Assets/wood.jpg" Stretch="UniformToFill"/>
+				</ItemsControl.Background>
+			</ItemsControl>
         
-    </Grid>
+		</ScrollViewer>
+		<controls:Tile HorizontalAlignment="Right" Margin="0,36,107,0" Grid.Row="1" VerticalAlignment="Top" Height="72" Width="72" Title="send" Command="{Binding ExecuteCommand, Mode=OneWay}">
+			<Image Height="30" Source="Assets/pickaxe.png" Stretch="Fill" Width="30" Margin="0,0,0,18"/>
+		</controls:Tile>
+        
+	</Grid>
 </controls:MetroWindow>

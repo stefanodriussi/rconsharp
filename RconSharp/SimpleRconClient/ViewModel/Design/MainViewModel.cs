@@ -90,7 +90,7 @@ namespace SimpleRconClient.ViewModel.Design
 
 		public IEnumerable<Model.CommunicationChunk> CommunicationChunks
 		{
-			get { throw new NotImplementedException(); }
+			get { return _communicationChunks; }
 		}
 
 
