@@ -17,9 +17,9 @@ namespace SimpleRconClient.ViewModel.Runtime
 		private string _host;
 		private int _port;
 		private string _password;
-		private RelayCommand _connectCommand;
+		private AsyncRelayCommand _connectCommand;
 		private RelayCommand _disconnectCommand;
-		private RelayCommand _executeCommand;
+		private AsyncRelayCommand _executeCommand;
 		private RelayCommand _clearLogsCommand;
 		private string _messageBody;
 		private bool _isWorking;
@@ -34,7 +34,7 @@ namespace SimpleRconClient.ViewModel.Runtime
 		{
 			_messenger = messenger;
 			_communicationChunks = new ObservableCollection<CommunicationChunk>();
-			_connectCommand = new RelayCommand(
+			_connectCommand = new AsyncRelayCommand(
 				async () => 
 				{
 					IsWorking = true;
@@ -45,11 +45,16 @@ namespace SimpleRconClient.ViewModel.Runtime
 						if (connected)
 						{
 							bool authenticated = await _messenger.AuthenticateAsync(_password);
-							IsConnected = true;
-							IsPanelOpen = false;
+							if (authenticated)
+							{
+								IsConnected = true;
+								IsPanelOpen = false;
+							}
+							else
+								ShowError("Wrong password. Unable to authenticate");
 						}
 						else
-							ShowError("Wrong password. Unable to authenticate");
+							ShowError("Connection error. Remote host refused the connection");
 					}
 					catch (Exception)
 					{
@@ -70,7 +75,7 @@ namespace SimpleRconClient.ViewModel.Runtime
 				},
 				() => { return _isConnected && !IsWorking; });
 
-			_executeCommand = new RelayCommand(
+			_executeCommand = new AsyncRelayCommand(
 				async () =>
 				{
 					IsWorking = true;
