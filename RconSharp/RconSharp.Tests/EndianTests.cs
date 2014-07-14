@@ -35,7 +35,7 @@ namespace RconSharp.Tests
 		[TestMethod]
 		public void ConvertIntToLittleEndian()
 		{
-			// Prepare
+			// Arrange
 			int value = 17;
 
 			// Act
@@ -50,7 +50,7 @@ namespace RconSharp.Tests
 		[TestMethod]
 		public void ConvertLittleEndianToInt()
 		{
-			// Prepare
+			// Arrange
 			byte[] bytes = new byte[] { 0x11, 0x00, 0x00, 0x00 };
 
 			// Act
@@ -65,7 +65,7 @@ namespace RconSharp.Tests
 		[ExpectedException(typeof(ArgumentException))]
 		public void ConvertLittleEndianToIntInvalidInput()
 		{
-			// Prepare
+			// Arrange
 			byte[] bytes = new byte[] { 0x11, 0x00, 0x00 };
 
 			// Act
