@@ -51,10 +51,14 @@ namespace SimpleRconClient.ViewModel.Runtime
 								IsPanelOpen = false;
 							}
 							else
+							{
 								ShowError("Wrong password. Unable to authenticate");
+							}
 						}
 						else
+						{
 							ShowError("Connection error. Remote host refused the connection");
+						}
 					}
 					catch (Exception)
 					{
@@ -62,7 +66,10 @@ namespace SimpleRconClient.ViewModel.Runtime
 					}
 					IsWorking = false;
 				},
-				() => { return !_isConnected && !string.IsNullOrEmpty(_host) && !IsWorking; });
+				() => 
+				{ 
+					return !_isConnected && !string.IsNullOrEmpty(_host) && !IsWorking; 
+				});
 
 			_disconnectCommand = new RelayCommand(
 				() =>
@@ -84,13 +91,23 @@ namespace SimpleRconClient.ViewModel.Runtime
 						Message = _messageBody,
 						MessageSent = DateTime.Now
 					};
-					var response = await _messenger.ExecuteCommandAsync(_messageBody);
-					chunk.Response = response;
-					chunk.ResponseReceived = DateTime.Now;
-					_communicationChunks.Add(chunk);
+					try
+					{
+						var response = await _messenger.ExecuteCommandAsync(_messageBody);
+						chunk.Response = response;
+						chunk.ResponseReceived = DateTime.Now;
+						_communicationChunks.Add(chunk);
+					}
+					catch (Exception)
+					{ 
+						
+					}
 					IsWorking = false;
 				},
-				() => { return _isConnected && _messageBody.Length > 0 && !IsWorking; });
+				() => 
+				{
+					return _isConnected && !string.IsNullOrEmpty(_messageBody) && !IsWorking; 
+				});
 
 			_clearLogsCommand = new RelayCommand(
 				() =>
@@ -104,6 +121,7 @@ namespace SimpleRconClient.ViewModel.Runtime
 		{
 			IsError = true;
 			ErrorMessage = errorMessage;
+			_messenger.CloseConnection();
 		}
 
 		private void ClearErrors()

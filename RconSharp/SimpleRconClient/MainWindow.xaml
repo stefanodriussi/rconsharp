@@ -26,14 +26,14 @@
 					</Grid.ColumnDefinitions>
 					<Image Height="32" Margin="0" Source="Assets/face2.png" Stretch="Fill" Grid.Column="0" Width="32" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 					<TextBlock TextWrapping="Wrap" Text="{Binding MessageSent, StringFormat=\{0:G\} &gt;&gt;}" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Column="1" VerticalAlignment="Top" Foreground="#FF2991E8"/>
-					<TextBlock TextWrapping="Wrap" Margin="10,25,0,0" Text="{Binding Message}" Grid.ColumnSpan="1" Grid.Column="1"><Run Text="TextBlock"/></TextBlock>
+					<TextBlock TextWrapping="Wrap" Margin="10,25,0,0" Text="{Binding Message}" Grid.ColumnSpan="1" Grid.Column="1"/>
 				</Grid>
 				<Grid Height="Auto" Margin="10,20,10,10">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="36"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Text="{Binding ResponseReceived, StringFormat=\{0:G\} &lt;&lt;}" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Column="1" VerticalAlignment="Top" Foreground="#FF6E3BC7"><Run Text="TextBlock"/></TextBlock>
+					<TextBlock TextWrapping="Wrap" Text="{Binding ResponseReceived, StringFormat=\{0:G\} &lt;&lt;}" Margin="10,0,0,0" Grid.ColumnSpan="1" Grid.Column="1" VerticalAlignment="Top" Foreground="#FF6E3BC7"/>
 					<TextBlock TextWrapping="Wrap" Text="{Binding Response}" Margin="10,25,0,0" Grid.ColumnSpan="1" Grid.Column="1" VerticalAlignment="Top"/>
 					<Image Height="32" Margin="0" Source="Assets/face1.png" Stretch="Fill" Grid.Column="0" Width="32" VerticalAlignment="Top"/>
 				</Grid>
@@ -66,9 +66,9 @@
 					<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Width="200">
 						<TextBlock Text="{Binding ErrorMessage, Mode=OneWay}" Foreground="White" HorizontalAlignment="Center" Background="Red" Margin="0,10" Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" TextWrapping="Wrap" TextAlignment="Center"/>
 						<TextBlock TextWrapping="Wrap" Text="minecraft server address"/>
-						<TextBox Height="23" TextWrapping="Wrap" Text="{Binding Host, Mode=TwoWay}"/>
+						<TextBox Height="23" TextWrapping="Wrap" Text="{Binding Host, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 						<TextBlock TextWrapping="Wrap" Text="server port"/>
-						<controls:NumericUpDown Minimum="1" Maximum="65000" Value="{Binding Port, Mode=TwoWay}"/>
+						<controls:NumericUpDown Minimum="1" Maximum="65000" Value="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 						<TextBlock TextWrapping="Wrap" Text="password"/>
 						<PasswordBox Height="23">
 							<i:Interaction.Behaviors>
@@ -87,14 +87,14 @@
 	</controls:MetroWindow.Flyouts>
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="681*"/>
-			<RowDefinition Height="145*"/>
+			<RowDefinition/>
+			<RowDefinition Height="134"/>
 		</Grid.RowDefinitions>
-		<TextBox HorizontalAlignment="Left" Height="72" TextWrapping="Wrap" VerticalAlignment="Top" Width="328" Margin="30,36,0,0" Grid.Row="1" Background="#D8FFFFFF"/>
+		<TextBox HorizontalAlignment="Left" Height="72" TextWrapping="Wrap" VerticalAlignment="Top" Width="328" Margin="30,36,0,0" Grid.Row="1" Background="#D8FFFFFF" Text="{Binding MessageBody, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 		<controls:Tile HorizontalAlignment="Right" Margin="0,36,30,0" Grid.Row="1" VerticalAlignment="Top" Height="72" Width="72" Title="clear" Command="{Binding ClearLogsCommand, Mode=OneWay}" Background="#CCDA8811">
 			<Image Source="Assets/tnt.png" Stretch="Fill" Width="30" Height="30" Margin="0,0,0,18"/>
 		</controls:Tile>
-		<Ellipse HorizontalAlignment="Left" Height="25" Margin="39,585.666,0,0" VerticalAlignment="Top" Width="473">
+		<Ellipse HorizontalAlignment="Center" Height="25" Margin="0,0,0,15" VerticalAlignment="Bottom" Width="473">
 			<Ellipse.Fill>
 				<RadialGradientBrush>
 					<GradientStop Color="#B72B2B2B" Offset="0"/>

@@ -91,7 +91,7 @@ namespace RconSharp.Net45
 			await ns.FlushAsync();
 			byte[] buffer = new byte[4096];
 			int offset = 0;
-			while (ns.DataAvailable)
+			while (offset < 14)
 			{
 				offset += await ns.ReadAsync(buffer, offset, buffer.Length);
 			}
