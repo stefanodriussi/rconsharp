@@ -86,6 +86,7 @@ namespace SimpleRconClient.ViewModel.Design
 		public string MessageBody
 		{
 			get { return "minecraft command"; }
+			set { throw new NotImplementedException(); }
 		}
 
 		public IEnumerable<Model.CommunicationChunk> CommunicationChunks
@@ -112,6 +113,30 @@ namespace SimpleRconClient.ViewModel.Design
 		public bool IsConnected
 		{
 			get { return true; }
+		}
+
+
+		public bool IsPanelOpen
+		{
+			get
+			{
+				return false;
+			}
+			set
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+
+		public bool IsError
+		{
+			get { return true; }
+		}
+
+		public string ErrorMessage
+		{
+			get { return "Connection error"; }
 		}
 	}
 }

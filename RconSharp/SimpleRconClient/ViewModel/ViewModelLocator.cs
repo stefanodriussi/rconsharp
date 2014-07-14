@@ -18,6 +18,7 @@ using Microsoft.Practices.ServiceLocation;
 using Ninject;
 using RconSharp;
 using RconSharp.Net45;
+using System;
 
 namespace SimpleRconClient.ViewModel
 {
@@ -41,8 +42,10 @@ namespace SimpleRconClient.ViewModel
 			}
 			else
 			{
-				// Create run time view services and models
-				_kernel.Bind<IMainViewModel>().To<SimpleRconClient.ViewModel.Runtime.MainViewModel>();
+				_kernel.Load(AppDomain.CurrentDomain.GetAssemblies());
+				_kernel.Bind<IMainViewModel>()
+					.To<SimpleRconClient.ViewModel.Runtime.MainViewModel>()
+					.InSingletonScope();
 			}
         }
 

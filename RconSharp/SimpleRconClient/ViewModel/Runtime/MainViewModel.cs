@@ -1,88 +1,228 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using RconSharp;
+using SimpleRconClient.Model;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace SimpleRconClient.ViewModel.Runtime
 {
-	public class MainViewModel : IMainViewModel
+	public class MainViewModel : ViewModelBase, IMainViewModel
 	{
+		private string _host;
+		private int _port;
+		private string _password;
+		private RelayCommand _connectCommand;
+		private RelayCommand _disconnectCommand;
+		private RelayCommand _executeCommand;
+		private RelayCommand _clearLogsCommand;
+		private string _messageBody;
+		private bool _isWorking;
+		private bool _isConnected;
+		private bool _isError;
+		private string _errorMessage;
+		private bool _isPanelOpen;
+		private ObservableCollection<CommunicationChunk> _communicationChunks;
+		private RconMessenger _messenger;
+
+		public MainViewModel(RconMessenger messenger)
+		{
+			_messenger = messenger;
+			_communicationChunks = new ObservableCollection<CommunicationChunk>();
+			_connectCommand = new RelayCommand(
+				async () => 
+				{
+					IsWorking = true;
+					ClearErrors();
+					try
+					{
+						bool connected = await _messenger.ConnectAsync(_host, _port);
+						if (connected)
+						{
+							bool authenticated = await _messenger.AuthenticateAsync(_password);
+							IsConnected = true;
+							IsPanelOpen = false;
+						}
+						else
+							ShowError("Wrong password. Unable to authenticate");
+					}
+					catch (Exception)
+					{
+						ShowError("Communication error. Unable to reach remote host");
+					}
+					IsWorking = false;
+				},
+				() => { return !_isConnected && !string.IsNullOrEmpty(_host) && !IsWorking; });
+
+			_disconnectCommand = new RelayCommand(
+				() =>
+				{
+					IsWorking = true;
+					
+					_messenger.CloseConnection();
+
+					IsWorking = false;
+				},
+				() => { return _isConnected && !IsWorking; });
+
+			_executeCommand = new RelayCommand(
+				async () =>
+				{
+					IsWorking = true;
+					var chunk = new CommunicationChunk() 
+					{
+						Message = _messageBody,
+						MessageSent = DateTime.Now
+					};
+					var response = await _messenger.ExecuteCommandAsync(_messageBody);
+					chunk.Response = response;
+					chunk.ResponseReceived = DateTime.Now;
+					_communicationChunks.Add(chunk);
+					IsWorking = false;
+				},
+				() => { return _isConnected && _messageBody.Length > 0 && !IsWorking; });
+
+			_clearLogsCommand = new RelayCommand(
+				() =>
+				{
+					_communicationChunks.Clear();
+				},
+				() => { return _communicationChunks.Count > 0; });
+		}
+
+		private void ShowError(string errorMessage)
+		{
+			IsError = true;
+			ErrorMessage = errorMessage;
+		}
+
+		private void ClearErrors()
+		{
+			IsError = false;
+			ErrorMessage = string.Empty;
+		}
+
 		public string Host
 		{
-			get
-			{
-				throw new NotImplementedException();
-			}
+			get { return _host; }
 			set
 			{
-				throw new NotImplementedException();
+				_host = value;
+				RaisePropertyChanged(() => Host);
 			}
 		}
 
 		public int Port
 		{
-			get
-			{
-				throw new NotImplementedException();
-			}
+			get { return _port; }
 			set
 			{
-				throw new NotImplementedException();
+				_port = value;
+				RaisePropertyChanged(() => Port);
 			}
 		}
 
 		public string Password
 		{
-			get
-			{
-				throw new NotImplementedException();
-			}
+			get { return _password; }
 			set
 			{
-				throw new NotImplementedException();
+				_password = value;
+				RaisePropertyChanged(() => Password);
 			}
 		}
 
-		public System.Windows.Input.ICommand ConnectCommand
+		public ICommand ConnectCommand
 		{
-			get { throw new NotImplementedException(); }
+			get { return _connectCommand; }
 		}
 
-		public System.Windows.Input.ICommand ExecuteCommand
+		public ICommand ExecuteCommand
 		{
-			get { throw new NotImplementedException(); }
+			get { return _executeCommand; }
 		}
 
 		public string MessageBody
 		{
-			get { throw new NotImplementedException(); }
+			get { return _messageBody; }
+			set
+			{
+				_messageBody = value;
+				RaisePropertyChanged(() => MessageBody);
+			}
 		}
 
-		public IEnumerable<Model.CommunicationChunk> CommunicationChunks
+		public IEnumerable<CommunicationChunk> CommunicationChunks
 		{
-			get { throw new NotImplementedException(); }
+			get { return _communicationChunks; }
 		}
 
 
-		public System.Windows.Input.ICommand DisconnectCommand
+		public ICommand DisconnectCommand
 		{
-			get { throw new NotImplementedException(); }
+			get { return _disconnectCommand; }
 		}
 
-		public System.Windows.Input.ICommand ClearLogsCommand
+		public ICommand ClearLogsCommand
 		{
-			get { throw new NotImplementedException(); }
+			get { return _clearLogsCommand; }
 		}
 
 		public bool IsWorking
 		{
-			get { throw new NotImplementedException(); }
+			get { return _isWorking; }
+			private set
+			{
+				_isWorking = value;
+				RaisePropertyChanged(() => IsWorking);
+			}
 		}
 
 		public bool IsConnected
 		{
-			get { throw new NotImplementedException(); }
+			get { return _isConnected; }
+			private set
+			{
+				_isConnected = value;
+				RaisePropertyChanged(() => IsConnected);
+			}
+		}
+
+
+		public bool IsPanelOpen
+		{
+			get { return _isPanelOpen; }
+			set
+			{
+				_isPanelOpen = value;
+				RaisePropertyChanged(() => IsPanelOpen);
+			}
+		}
+
+
+		public bool IsError
+		{
+			get { return _isError; }
+			private set
+			{
+				_isError = value;
+				RaisePropertyChanged(() => IsError);
+			}
+		}
+
+		public string ErrorMessage
+		{
+			get { return _errorMessage; }
+			private set
+			{
+				_errorMessage = value;
+				RaisePropertyChanged(() => ErrorMessage);
+			}
 		}
 	}
 }
