@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp.Tests", "RconShar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp.Net45", "RconSharp.Net45\RconSharp.Net45.csproj", "{3714B98E-C587-41E3-8840-8766F40A5EF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleRconClient", "SimpleRconClient\SimpleRconClient.csproj", "{F2105D83-AA1A-4B9A-A8F8-DB8E5220CB58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleRconClient.Tests", "SimpleRconClient.Tests\SimpleRconClient.Tests.csproj", "{97E6310D-55A1-47C9-9E00-399045B73F44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2105D83-AA1A-4B9A-A8F8-DB8E5220CB58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2105D83-AA1A-4B9A-A8F8-DB8E5220CB58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2105D83-AA1A-4B9A-A8F8-DB8E5220CB58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2105D83-AA1A-4B9A-A8F8-DB8E5220CB58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97E6310D-55A1-47C9-9E00-399045B73F44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97E6310D-55A1-47C9-9E00-399045B73F44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97E6310D-55A1-47C9-9E00-399045B73F44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97E6310D-55A1-47C9-9E00-399045B73F44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

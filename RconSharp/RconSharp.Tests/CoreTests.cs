@@ -34,7 +34,7 @@ namespace RconSharp.Tests
 		[TestMethod]
 		public void BuildPacket()
 		{ 
-			// Prepare
+			// Arrange
 			var packet = new RconPacket(PacketType.Auth, "password");
 
 			// Act
@@ -52,7 +52,7 @@ namespace RconSharp.Tests
 		[ExpectedException(typeof(ArgumentException))]
 		public void BuildPacketWithoutType()
 		{
-			// Prepare
+			// Arrange
 			var packet = new RconPacket(null, "password");
 
 			// Act
@@ -63,7 +63,7 @@ namespace RconSharp.Tests
 		[TestMethod]
 		public void BuildPacketWithEmptyContent()
 		{
-			// Prepare
+			// Arrange
 			var packet = new RconPacket(PacketType.Auth, string.Empty);
 
 			// Act
@@ -78,8 +78,8 @@ namespace RconSharp.Tests
 		[TestCategory("Packets")]
 		[TestMethod]
 		public void BuildPacketFromBytes()
-		{ 
-			// Prepare
+		{
+			// Arrange
 			var originalPacket = new RconPacket(PacketType.Auth, "password");
 
 			// Act

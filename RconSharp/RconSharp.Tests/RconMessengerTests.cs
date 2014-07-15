@@ -35,8 +35,8 @@ namespace RconSharp.Tests
 		[TestMethod]
 		[TestCategory("RconMessenger")]
 		public async Task AuthenticateWithCorrectPassword()
-		{ 
-			// Prepare
+		{
+			// Arrange
 			byte[] fakeResponse = new byte[] { 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  0x02, 0x00, 0x00, 0x00, 0x00, 0x00  };
 			var messenger = SetupMessenger(fakeResponse, false);
 
@@ -51,7 +51,7 @@ namespace RconSharp.Tests
 		[TestCategory("RconMessenger")]
 		public async Task AuthenticateWithInvalidPassword()
 		{
-			// Prepare
+			// Arrange
 			byte[] fakeResponse = new byte[] { 0x0a, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00 };
 			var messenger = SetupMessenger(fakeResponse, true);
 
@@ -65,8 +65,8 @@ namespace RconSharp.Tests
 		[TestMethod]
 		[TestCategory("RconMessenger")]
 		public async Task SendCommandWithoutAuthentication()
-		{ 
-			// Prepare
+		{
+			// Arrange
 			var messenger = SetupMessenger(null, false);
 
 			// Act and Assert
@@ -84,7 +84,7 @@ namespace RconSharp.Tests
 		[TestCategory("RconMessenger")]
 		public async Task SendEmptyCommand()
 		{
-			// Prepare
+			// Arrange
 			var messenger = SetupMessenger(null, false);
 
 			// Act and Assert
@@ -102,7 +102,7 @@ namespace RconSharp.Tests
 		[TestCategory("RconMessenger")]
 		public async Task SendValidCommand()
 		{
-			// Prepare
+			// Arrange
 			byte[] fakeResponse = new RconPacket(PacketType.ResponseValue, "command response").GetBytes();
 			var messenger = SetupMessenger(fakeResponse, true);
 
