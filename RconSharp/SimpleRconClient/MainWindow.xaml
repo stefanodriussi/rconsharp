@@ -5,7 +5,7 @@
 		xmlns:Behaviors="clr-namespace:SimpleRconClient.Behaviors"
 		xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Converters="clr-namespace:SimpleRconClient.Converters" xmlns:Actions="clr-namespace:MahApps.Metro.Actions;assembly=MahApps.Metro" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" mc:Ignorable="d"  x:Class="SimpleRconClient.MainWindow"
-        Title="MainWindow" Height="796" Width="550" Background="{DynamicResource ImageBrush1}">
+        Title="Minecrat Controller" Height="796" Width="550" Background="{DynamicResource ImageBrush1}" MaxWidth="550" MaxHeight="796" MinWidth="550" MinHeight="796">
 	<controls:MetroWindow.Resources>
 		<Converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 		<Style TargetType="{x:Type Image}">
