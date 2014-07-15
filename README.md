@@ -32,6 +32,7 @@ if (authenticated)
 ```
 
 Note: rconsharp is designed to work with the `async/await` paradigm. Nothing to be afraid of but remember you have to mark the encapsulating method with the `async` keyword. Refer to the [official documentation](http://msdn.microsoft.com/en-us/library/hh191443.aspx) if you wish to learn more on the subject.
+
 ### Dependencies
 
 All the dependencies within this project are referenced as NuGet packages and will be restored upon first build (if you have this option enabled NuGet settings).
@@ -39,7 +40,16 @@ Following is the list of referenced packages:
 * Microsoft Async
 * Microsoft BCL Build Components
 * Microsoft BCL Portability Pack
-* Moq
+* Mvvm Light (for the test client)
+* Moq (just for the tests)
+
+
+## Client example
+
+I've created a simple client for real world testing purposes. It's developed using WPF so technically it's Windows only (maybe i'll create another version more OS independent). As the name suggests, it's really simple: connects to a RCON Minecraft Server (but actually could be any RCON enabled server if you can stand the pixeled theme), sends commands and reads responses.
+It can be found under `SimpleRconClient` path.
+
+![Minecraft RCON Client screenshot](/assets/screenshot.png)
 
 ## Licensing
 
