@@ -38,7 +38,7 @@ if (authenticated)
 }
 ```
 
-Note: rconsharp is designed to work with the `async/await` paradigm. Nothing to be afraid of but remember you have to mark the encapsulating method with the `async` keyword. Refer to the [official documentation](http://msdn.microsoft.com/en-us/library/hh191443.aspx) if you wish to learn more on the subject.
+Note: rconsharp is designed to work with the `async/await` paradigm. Nothing to be afraid of but remember you have to mark the encapsulating method with the `async` keyword and you have to `await` the `awaitable` methods in order to get the results. Refer to the [official documentation](http://msdn.microsoft.com/en-us/library/hh191443.aspx) if you wish to learn more on the subject.
 
 ### Dependencies
 
