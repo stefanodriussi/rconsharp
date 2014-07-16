@@ -7,6 +7,13 @@ rconsharp is a [Valve RCON](https://developer.valvesoftware.com/wiki/Source_RCON
 Clone this repository and build the solution to get the assemblies. At this point of time, you can either reference the PCL and provide your custom implementation of `INetworkSocket` or reference the other projects (right now only .Net 4.5 is implemented).
 Due to the shared structure of PCLs it's not possible to have a common implementation of a network socket and this is the reason why a concrete class to handle network communication will be needed for each platform you need to target.
 
+### NuGet packages
+
+Instead of manually downloading binaries or building the sources, you can simply add it by installing the NuGet package. Just search for `rconsharp` from the package manager or type `PM> Install-Package RconSharp` in NuGet command line.
+
+There's also a package contining an implementation of `INetworkSocket` interface. Search for `rconsharp.socket` or type `PM> Install-Package RconSharp.Socket ` in NuGet command line.
+Currently only .net 4.5 is supported and as soon as i can find some spare time i will provide implementations for other platforms.
+
 ## Quick example
 
 This is a very basic snippet that allows you to forward commands to a Rcon enabled remote server.
