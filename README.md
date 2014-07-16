@@ -53,10 +53,7 @@ Following is the list of referenced packages:
 
 ## Client example
 
-I've created a simple client for real world testing purposes. It's developed using WPF so technically it's Windows only (maybe i'll create another version more OS independent). As the name suggests, it's really simple: connects to a RCON Minecraft Server (but actually could be any RCON enabled server if you can stand the pixeled theme), sends commands and reads responses.
-It can be found under `SimpleRconClient` path.
-
-![Minecraft RCON Client screenshot](/assets/screenshot.png)
+The client example has been moved to his own repository. You can find it [here](https://github.com/stefanodriussi/minecraft-remote-controller)
 
 ## Licensing
 
