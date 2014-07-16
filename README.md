@@ -47,7 +47,6 @@ Following is the list of referenced packages:
 * Microsoft Async
 * Microsoft BCL Build Components
 * Microsoft BCL Portability Pack
-* Mvvm Light (for the test client)
 * Moq (just for the tests)
 
 
