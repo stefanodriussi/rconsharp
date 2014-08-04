@@ -26,7 +26,7 @@ namespace SimpleRconClient.ViewModel
     /// This class contains static references to all the view models in the
     /// application and provides an entry point for the bindings.
     /// </summary>
-    public class ViewModelLocator
+    public class ViewModelLocator : IDisposable
     {
 		private readonly IKernel _kernel;
         /// <summary>
@@ -56,10 +56,11 @@ namespace SimpleRconClient.ViewModel
 				return _kernel.Get<IMainViewModel>();
             }
         }
-        
-        public static void Cleanup()
-        {
-            // TODO Clear the ViewModels
-        }
-    }
+
+		public void Dispose()
+		{
+			if (_kernel != null && !_kernel.IsDisposed)
+				_kernel.Dispose();
+		}
+	}
 }
