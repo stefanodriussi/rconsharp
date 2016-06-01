@@ -34,7 +34,7 @@ if (authenticated)
 {
   // if we fall here, we're good to go! from this point on the connection is authenticated and you can send commands 
   // to the server
-  var response = messenger.ExecuteCommandAsync("/help");
+  var response = await messenger.ExecuteCommandAsync("/help");
 }
 ```
 
