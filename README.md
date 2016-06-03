@@ -17,6 +17,7 @@ Currently only .net 4.5 is supported and as soon as i can find some spare time i
 ## Quick example
 
 This is a very basic snippet that allows you to forward commands to a Rcon enabled remote server.
+(In order to run this example, you also need the package `RconSharp.Socket` to be installed from NuGet)
 
 ```
 // create an instance of the socket. In this case i've used the .Net 4.5 object defined in the project
@@ -47,13 +48,12 @@ Following is the list of referenced packages:
 * Microsoft Async
 * Microsoft BCL Build Components
 * Microsoft BCL Portability Pack
-* Mvvm Light (for the test client)
 * Moq (just for the tests)
 
 
 ## Client example
 
-The client example has been moved to his own repository. You can find it [here](https://github.com/stefanodriussi/minecraft-remote-controller)
+The minecraft client example has been moved to his own repository. You can find it [here](https://github.com/stefanodriussi/minecraft-remote-controller)
 
 ## Licensing
 
