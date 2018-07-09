@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp", "RconSharp\RconSharp.csproj", "{E85EB942-10E7-48BE-AC33-F82BAD5F45D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RconSharp", "RconSharp\RconSharp.csproj", "{E85EB942-10E7-48BE-AC33-F82BAD5F45D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp.Tests", "RconSharp.Tests\RconSharp.Tests.csproj", "{8A325B86-C967-40C7-B9A8-8A8504BA642E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp.Net45", "RconSharp.Net45\RconSharp.Net45.csproj", "{3714B98E-C587-41E3-8840-8766F40A5EF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,12 +21,11 @@ Global
 		{8A325B86-C967-40C7-B9A8-8A8504BA642E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A325B86-C967-40C7-B9A8-8A8504BA642E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A325B86-C967-40C7-B9A8-8A8504BA642E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3714B98E-C587-41E3-8840-8766F40A5EF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E1CE26A9-618A-44AD-AC47-82682045551A}
 	EndGlobalSection
 EndGlobal

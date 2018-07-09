@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-
-/*
+﻿/*
 The MIT License (MIT)
 
 Copyright (c) 2014 Stefano Driussi
@@ -26,7 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-namespace RconSharp.Net45
+using System;
+using System.Net.Sockets;
+using System.Threading.Tasks;
+
+namespace RconSharp
 {
 	/// <summary>
 	/// .NET 4.5 implementation of <see cref="INetworkSocket"/> interface
