@@ -4,5 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>RconSharp</AssemblyName>
     <PackageId>RconSharp</PackageId>
+    <Authors>Stefano Driussi</Authors>
+    <Product>Rcon Sharp</Product>
+    <Description>rconsharp is a Valve RCON protocol implementation for .NET written in C#.</Description>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/stefanodriussi/rconsharp/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/stefanodriussi/rconsharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/stefanodriussi/rconsharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>RCON, valve</PackageTags>
+    <Copyright>Copyright © Stefano Driussi 2018</Copyright>
   </PropertyGroup>
 </Project>
