@@ -55,7 +55,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="CoreTests.cs" />
-    <Compile Include="EndianTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RconMessengerTests.cs" />
   </ItemGroup>
