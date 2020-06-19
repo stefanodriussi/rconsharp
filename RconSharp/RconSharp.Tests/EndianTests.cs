@@ -1,6 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RconSharp.Extensions;
+﻿using RconSharp.Extensions;
 using System;
+using System.ComponentModel;
+using Xunit;
 
 /*
 The MIT License (MIT)
@@ -28,11 +29,9 @@ SOFTWARE.
 
 namespace RconSharp.Tests
 {
-	[TestClass]
 	public class EndianTests
 	{
-		[TestCategory("Little Endian Conversion")]
-		[TestMethod]
+		[Fact, Category("Little Endian Conversion")]
 		public void ConvertIntToLittleEndian()
 		{
 			// Arrange
@@ -42,12 +41,11 @@ namespace RconSharp.Tests
 			byte[] bytes = value.ToLittleEndian();
 
 			// Assert
-			Assert.IsTrue(bytes.Length == 4);
-			Assert.IsTrue(bytes[0] == 0x11);
+			Assert.True(bytes.Length == 4);
+			Assert.True(bytes[0] == 0x11);
 		}
 
-		[TestCategory("Little Endian Conversion")]
-		[TestMethod]
+		[Fact, Category("Little Endian Conversion")]
 		public void ConvertLittleEndianToInt()
 		{
 			// Arrange
@@ -57,21 +55,18 @@ namespace RconSharp.Tests
 			int value = bytes.ToInt32(0);
 
 			// Assert
-			Assert.AreEqual(value, 17);
+			Assert.Equal(17, value);
 		}
 
-		[TestCategory("Little Endian Conversion")]
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentException))]
+		[Fact, Category("Little Endian Conversion")]
 		public void ConvertLittleEndianToIntInvalidInput()
 		{
 			// Arrange
 			byte[] bytes = new byte[] { 0x11, 0x00, 0x00 };
 
 			// Act
-			int value = bytes.ToInt32(0);
+			Assert.Throws<ArgumentException>(() => bytes.ToInt32(0));
 
-			// Assert
 		}
 	}
 }
