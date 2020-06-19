@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore ./RconSharp/RconSharp.Tests
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ./RconSharp/RconSharp.Tests --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test ./RconSharp/RconSharp.Tests --no-restore --verbosity normal
