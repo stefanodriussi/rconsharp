@@ -1,12 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp", "RconSharp\RconSharp.csproj", "{E85EB942-10E7-48BE-AC33-F82BAD5F45D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp.Tests", "RconSharp.Tests\RconSharp.Tests.csproj", "{8A325B86-C967-40C7-B9A8-8A8504BA642E}"
-EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RconSharp.Tests", "RconSharp.Tests\RconSharp.Tests.csproj", "{A2B94529-17EB-4754-9B75-DDC51B93524D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,12 +17,15 @@ Global
 		{E85EB942-10E7-48BE-AC33-F82BAD5F45D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E85EB942-10E7-48BE-AC33-F82BAD5F45D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E85EB942-10E7-48BE-AC33-F82BAD5F45D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A325B86-C967-40C7-B9A8-8A8504BA642E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A325B86-C967-40C7-B9A8-8A8504BA642E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A325B86-C967-40C7-B9A8-8A8504BA642E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A325B86-C967-40C7-B9A8-8A8504BA642E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2B94529-17EB-4754-9B75-DDC51B93524D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2B94529-17EB-4754-9B75-DDC51B93524D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2B94529-17EB-4754-9B75-DDC51B93524D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2B94529-17EB-4754-9B75-DDC51B93524D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {562B8BFF-DD65-41CF-9405-C5FA00F485FC}
 	EndGlobalSection
 EndGlobal

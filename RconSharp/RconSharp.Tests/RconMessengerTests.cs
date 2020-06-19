@@ -1,7 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
+using Xunit;
 
 /*
 The MIT License (MIT)
@@ -29,11 +30,9 @@ SOFTWARE.
 
 namespace RconSharp.Tests
 {
-	[TestClass]
 	public class RconMessengerTests
 	{
-		[TestMethod]
-		[TestCategory("RconMessenger")]
+		[Fact, Category("RconMessenger")]
 		public async Task AuthenticateWithCorrectPassword()
 		{
 			// Arrange
@@ -44,11 +43,10 @@ namespace RconSharp.Tests
 			bool response = await messenger.AuthenticateAsync("correctPassword");
 
 			// Assert
-			Assert.IsTrue(response);
+			Assert.True(response);
 		}
 
-		[TestMethod]
-		[TestCategory("RconMessenger")]
+		[Fact, Category("RconMessenger")]
 		public async Task AuthenticateWithInvalidPassword()
 		{
 			// Arrange
@@ -59,11 +57,10 @@ namespace RconSharp.Tests
 			bool response = await messenger.AuthenticateAsync("correctPassword");
 
 			// Assert
-			Assert.IsFalse(response);
+			Assert.False(response);
 		}
 
-		[TestMethod]
-		[TestCategory("RconMessenger")]
+		[Fact, Category("RconMessenger")]
 		public async Task SendCommandWithoutAuthentication()
 		{
 			// Arrange
@@ -73,15 +70,14 @@ namespace RconSharp.Tests
 			try
 			{
 				var response = await messenger.ExecuteCommandAsync("somecommand");
-				Assert.Fail();
+				Assert.NotNull(response);
 			}
 			catch (InvalidOperationException)
 			{ 
 			}
 		}
 
-		[TestMethod]
-		[TestCategory("RconMessenger")]
+		[Fact, Category("RconMessenger")]
 		public async Task SendEmptyCommand()
 		{
 			// Arrange
@@ -91,15 +87,14 @@ namespace RconSharp.Tests
 			try
 			{
 				var response = await messenger.ExecuteCommandAsync(string.Empty);
-				Assert.Fail();
+				Assert.NotNull(response);
 			}
 			catch (ArgumentException)
 			{
 			}
 		}
 
-		[TestMethod]
-		[TestCategory("RconMessenger")]
+		[Fact, Category("RconMessenger")]
 		public async Task SendValidCommand()
 		{
 			// Arrange
@@ -110,7 +105,7 @@ namespace RconSharp.Tests
 			var response = await messenger.ExecuteCommandAsync("command");
 
 			// Assert
-			Assert.AreEqual("command response", response);
+			Assert.Equal("command response", response);
 		}
 
 		private RconMessenger SetupMessenger(byte[] fakeResponse, bool isConnected)

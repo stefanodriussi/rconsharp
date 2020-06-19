@@ -1,5 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using System.ComponentModel;
+using Xunit;
 
 /*
 The MIT License (MIT)
@@ -27,11 +28,9 @@ SOFTWARE.
 
 namespace RconSharp.Tests
 {
-	[TestClass]
 	public class CoreTests
 	{
-		[TestCategory("Packets")]
-		[TestMethod]
+		[Fact, Category("Packets")]
 		public void BuildPacket()
 		{ 
 			// Arrange
@@ -41,26 +40,22 @@ namespace RconSharp.Tests
 			var buffer = packet.GetBytes();
 
 			// Asert
-			Assert.IsNotNull(buffer);
-			Assert.IsTrue(buffer.Length == 22);  // 14 fixed bytes + 8 bytes for "password" string encoding
-			Assert.IsTrue(buffer[0] == 0x12);
-			Assert.IsTrue(buffer[buffer.Length - 1] == 0x00 && buffer[buffer.Length - 2] == 0x00);
+			Assert.NotNull(buffer);
+			Assert.True(buffer.Length == 22);  // 14 fixed bytes + 8 bytes for "password" string encoding
+			Assert.True(buffer[0] == 0x12);
+			Assert.True(buffer[buffer.Length - 1] == 0x00 && buffer[buffer.Length - 2] == 0x00);
 		}
 
-		[TestCategory("Packets")]
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentException))]
+		[Fact, Category("Packets")]
 		public void BuildPacketWithoutType()
 		{
 			// Arrange
-			var packet = new RconPacket(null, "password");
 
 			// Act
-			var buffer = packet.GetBytes();
+			Assert.Throws<ArgumentException>(() => new RconPacket(null, "password"));
 		}
 
-		[TestCategory("Packets")]
-		[TestMethod]
+		[Fact, Category("Packets")]
 		public void BuildPacketWithEmptyContent()
 		{
 			// Arrange
@@ -70,13 +65,12 @@ namespace RconSharp.Tests
 			var buffer = packet.GetBytes();
 
 			// Asert
-			Assert.IsNotNull(buffer);
-			Assert.IsTrue(buffer.Length == 14);  // 14 fixed bytes
-			Assert.IsTrue(buffer[buffer.Length - 1] == 0x00 && buffer[buffer.Length - 2] == 0x00);
+			Assert.NotNull(buffer);
+			Assert.True(buffer.Length == 14);  // 14 fixed bytes
+			Assert.True(buffer[buffer.Length - 1] == 0x00 && buffer[buffer.Length - 2] == 0x00);
 		}
 
-		[TestCategory("Packets")]
-		[TestMethod]
+		[Fact, Category("Packets")]
 		public void BuildPacketFromBytes()
 		{
 			// Arrange
@@ -87,8 +81,8 @@ namespace RconSharp.Tests
 			var parsedPacket = RconPacket.FromBytes(buffer);
 
 			// Assert
-			Assert.IsTrue(parsedPacket.Body.Equals(originalPacket.Body));
-			Assert.IsTrue(parsedPacket.Id.Equals(originalPacket.Id));
+			Assert.True(parsedPacket.Body.Equals(originalPacket.Body));
+			Assert.True(parsedPacket.Id.Equals(originalPacket.Id));
 		}
 	}
 }
