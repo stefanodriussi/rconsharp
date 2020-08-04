@@ -25,38 +25,20 @@ SOFTWARE.
 namespace RconSharp
 {
 	/// <summary>
-	/// RCON Packet type
+	/// RCON Packet type as defined in <see cref="https://developer.valvesoftware.com/wiki/Source_RCON_Protocol#Requests_and_Responses"/>
 	/// </summary>
-	public class PacketType
+	public enum PacketType
 	{
-		/// <summary>
-		/// Gets the value according to RCON protocol
-		/// </summary>
-		public int Value { get; internal set; }
+		// SERVERDATA_RESPONSE_VALUE
+		Response = 0,
 
-		/// <summary>
-		/// Gets the original RCON Packet Type name as defined in the protocol
-		/// </summary>
-		public string ProtocolName { get; internal set; }
+		// SERVERDATA_AUTH_RESPONSE
+		AuthResponse = 2,
 
-		/// <summary>
-		/// Auth Packet Type
-		/// </summary>
-		public static PacketType Auth = new PacketType() { ProtocolName = "SERVERDATA_AUTH", Value = 3 };
+		// SERVERDATA_EXECCOMMAND
+		ExecCommand = 2,
 
-		/// <summary>
-		/// Auth Response Packet Type
-		/// </summary>
-		public static PacketType AuthResponse = new PacketType() { ProtocolName = "SERVERDATA_AUTH_RESPONSE", Value = 2 };
-
-		/// <summary>
-		/// Exec Command Packet Type
-		/// </summary>
-		public static PacketType ExecCommand = new PacketType() { ProtocolName = "SERVERDATA_EXECCOMMAND", Value = 2 };
-
-		/// <summary>
-		/// Response Value Packet Type
-		/// </summary>
-		public static PacketType ResponseValue = new PacketType() { ProtocolName = "SERVERDATA_RESPONSE_VALUE", Value = 0 };
+		// SERVERDATA_AUTH
+		Auth = 3
 	}
 }
