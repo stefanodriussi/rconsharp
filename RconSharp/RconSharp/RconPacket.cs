@@ -1,5 +1,4 @@
-﻿using RconSharp.Extensions;
-using System;
+﻿using System;
 using System.Text;
 
 /*
@@ -33,69 +32,59 @@ namespace RconSharp
 	/// </summary>
 	public class RconPacket
 	{
-		private const int sizeIndex = 0;
-		private const int idIndex = 4;
-		private const int typeIndex = 8;
-		private const int bodyIndex = 12;
-		private string _body;
 
 		/// <summary>
 		/// Class constructor
 		/// </summary>
 		/// <param name="type">Packet Type</param>
 		/// <param name="content">Packet content</param>
-		public RconPacket(PacketType type, string content)
+		public static RconPacket Create(PacketType type, string content)
 		{
-			if (type == null)
-				throw new ArgumentException("Error: type parameter must not be null");
-
-			Type = type;
-			_body = content ?? string.Empty;
-			Id = Environment.TickCount;
+			return new RconPacket 
+			{
+				Type = type,
+				Body = string.IsNullOrEmpty(content) ? "\0" : content,
+				Id = ProgressiveId.Next(),
+			};
 		}
 
 		private RconPacket() { }
-		
+
 		/// <summary>
 		/// Gets the packet size according to RCON Protocol
 		/// </summary>
 		/// <remarks>This value is equal to 10 (fixed bytes) + body lenght. The 4 bytes for the Size field are not added</remarks>
-		public int Size
-		{
-			get { return _body.Length + 10; }
-		}
+		public int Size => Math.Max(10, Body.Length + 9);
 
 		/// <summary>
 		/// Gets or Sets the packet id
 		/// </summary>
 		/// <remarks>This value can be set to any integer. By default is set to the current Environment.TickCount property</remarks>
-		public int Id { get; set; }
+		public int Id { get; private set; }
 
 		/// <summary>
 		/// Gets the Packet Type
 		/// </summary>
-		public PacketType Type { get; internal set; }
+		public PacketType Type { get; private set; }
 
 		/// <summary>
 		/// Gets the Packet body
 		/// </summary>
-		public string Body
-		{
-			get { return _body; }
-			private set { _body = value; }
-		}
+		public string Body { get; private set; }
 
 		/// <summary>
 		/// Gets the bytes composing this Packet as defined in RCON Protocol
 		/// </summary>
 		/// <returns></returns>
-		public byte[] GetBytes()
+		public byte[] ToBytes()
 		{
-			byte[] buffer = new byte[Size + 4];
-			Size.ToLittleEndian().CopyTo(buffer, sizeIndex);
-			Id.ToLittleEndian().CopyTo(buffer, idIndex);
-			Type.Value.ToLittleEndian().CopyTo(buffer, typeIndex);
-			Encoding.UTF8.GetBytes(Body).CopyTo(buffer, bodyIndex);
+			var body = Encoding.UTF8.GetBytes(Body + "\0"); // add null string terminator
+			var buffer = new byte[12 + body.Length + 1]; // 12 bytes for Length, Id and Type
+			var span = buffer.AsSpan();
+			body.CopyTo(span[12..]);
+			BitConverter.GetBytes(body.Length + 9).CopyTo(span[0..4]);
+			BitConverter.GetBytes(Id).CopyTo(span[4..8]);
+			BitConverter.GetBytes((int)Type).CopyTo(span[8..12]);
 			return buffer;
 		}
 
@@ -107,16 +96,18 @@ namespace RconSharp
 		/// <exception cref="System.ArgumentException">When buffer is null or its size is less than 14</exception>
 		public static RconPacket FromBytes(byte[] buffer)
 		{
-			if (buffer == null || buffer.Length < 14)
+			if (buffer == null) throw new ArgumentNullException("Input buffer parameter cannot be null");
+			if (buffer.Length < 4) throw new ArgumentException("Input buffer parameter lenght is less than minimum required of 4 bytes");
+
+			var size = BitConverter.ToInt32(buffer[..4]);
+			if (size > buffer.Length - 4) throw new ArgumentOutOfRangeException($"Declared packet size [{size}] is larger than actual buffer length");
+
+			return new RconPacket()
 			{
-				throw new ArgumentException("Invalid packet");
-			}
-			RconPacket packet = new RconPacket()
-			{
-				Body = Encoding.UTF8.GetString(buffer, bodyIndex, buffer.ToInt32(sizeIndex) - 10),
-				Id = buffer.ToInt32(idIndex)
+				Type = (PacketType)BitConverter.ToInt32(buffer[8..12]),
+				Body = Encoding.UTF8.GetString(buffer[12..]).Replace("\0", ""),
+				Id = BitConverter.ToInt32(buffer[4..8])
 			};
-			return packet;
 		}
 	}
 }
