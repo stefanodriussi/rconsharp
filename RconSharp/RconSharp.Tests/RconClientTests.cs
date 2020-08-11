@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Xunit;
 
 namespace RconSharp.Tests
@@ -17,11 +14,10 @@ namespace RconSharp.Tests
             await rconClient.ConnectAsync();
 
             // Act
-            var response = await rconClient.SendPacketAsync(RconPacket.Create(PacketType.ExecCommand, "test echo"));
+            var response = await rconClient.ExecuteCommandAsync("test echo");
 
             // Assert
-            Assert.Equal(PacketType.Response, response.Type);
-            Assert.Equal("Command executed", response.Body);
+            Assert.Equal("Command executed", response);
         }
 
         [Fact]
@@ -39,8 +35,40 @@ namespace RconSharp.Tests
             };
 
             // Act Assert
-            await Assert.ThrowsAsync<TaskCanceledException>(() => rconClient.SendPacketAsync(RconPacket.Create(PacketType.ExecCommand, "test echo")));
+            await Assert.ThrowsAsync<TaskCanceledException>(() => rconClient.ExecuteCommandAsync("test echo"));
             Assert.True(isConnectionClosed);
+        }
+
+        [Theory]
+        [InlineData("valid", true)]
+        [InlineData("invalid", false)]
+        public async Task AuthenticateShouldWorkOnStrictRCONServers(string password, bool isAuthenticated)
+        {
+            // Arrange
+            var channel = new SourceChannel();
+            var rconClient = RconClient.Create(channel);
+            await rconClient.ConnectAsync();
+
+            // Act
+            var response = await rconClient.AuthenticateAsync(password);
+
+            // Assert
+            Assert.Equal(isAuthenticated, response);
+        }
+
+        [Fact]
+        public async Task MultiPacketResponseShouldBeCorrectlyReceivedFromStrictRCONServers()
+        {
+            // Arrange
+            var channel = new SourceChannel();
+            var rconClient = RconClient.Create(channel);
+            await rconClient.ConnectAsync();
+
+            // Act
+            var response = await rconClient.ExecuteCommandAsync("print all", true);
+
+            // Assert
+            Assert.Equal("This will be a very long message", response);
         }
     }
 }

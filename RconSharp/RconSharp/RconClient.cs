@@ -2,6 +2,8 @@
 using System.Buffers;
 using System.Collections.Generic;
 using System.IO.Pipelines;
+using System.Linq;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 /*
@@ -37,7 +39,8 @@ namespace RconSharp
 	{
 		private IChannel channel;
 		private Pipe pipe = new Pipe();
-		private Queue<TaskCompletionSource<RconPacket>> queuedCommands = new Queue<TaskCompletionSource<RconPacket>>();
+
+		private Queue<Operation> operations = new Queue<Operation>();
 		private Task communicationTask;
 		public event Action ConnectionClosed;
         public static RconClient Create(string host, int port) => new RconClient(new SocketChannel(host, port));
@@ -69,9 +72,9 @@ namespace RconSharp
 			communicationTask = Task.WhenAll(readingTask, writingTask).ContinueWith(t =>
 			{
 				pipe.Reset();
-				while (queuedCommands.TryDequeue(out var result))
+				while (operations.TryDequeue(out var result))
 				{
-					result.SetCanceled();
+					result.TaskCompletionSource.SetCanceled();
 				}
 				ConnectionClosed?.Invoke();
 			});
@@ -126,8 +129,26 @@ namespace RconSharp
 				{
 					var endPosition = buffer.GetPosition(packetSize + 4, startPosition);
 					var rconPacket = RconPacket.FromBytes(buffer.Slice(startPosition, endPosition).ToArray());
-					var pendingTask = queuedCommands.Dequeue();
-					pendingTask.SetResult(rconPacket);
+					if (!rconPacket.IsDummy)
+					{
+						var currentOperation = operations.Peek();
+						currentOperation.Add(rconPacket);
+						if (currentOperation.OriginalRequest.Type == PacketType.Auth && rconPacket.Type == PacketType.Response)
+						{
+							// According to RCON documentation an empty RESPONSE packet must be sent after the auth request, but at the moment only CS:GO does so ..
+						}
+						else if (currentOperation.IsMultiPacketResponse && !string.IsNullOrEmpty(rconPacket.Body))
+						{
+							// Accumulate and move on
+						}
+						else
+						{
+							operations.Dequeue();
+							if (rconPacket.Id == -1) currentOperation.TaskCompletionSource.SetException(new AuthenticationException("Invalid password"));
+							else currentOperation.TaskCompletionSource.SetResult(currentOperation.Body);
+						}
+					}
+					
 					reader.AdvanceTo(endPosition);
 				}
 				else
@@ -154,8 +175,20 @@ namespace RconSharp
 				throw new ArgumentException("password parameter must be a non null non empty string");
 
 			var authPacket = RconPacket.Create(PacketType.Auth, password);
-			var response = await SendPacketAsync(authPacket);
-			return response.Id != -1;
+			try
+			{
+				var response = await SendPacketAsync(authPacket);
+			}
+			catch (AuthenticationException ex)
+			{
+				return false;
+			}
+			return true;
+		}
+
+		public Task<string> ExecuteCommandAsync(string command, bool isMultiPacketResponse = false)
+		{
+			return SendPacketAsync(RconPacket.Create(PacketType.ExecCommand, command), isMultiPacketResponse);
 		}
 
 		/// <summary>
@@ -163,12 +196,33 @@ namespace RconSharp
 		/// </summary>
 		/// <param name="packet">Packet to be sent</param>
 		/// <returns>The response to this command</returns>
-		public async Task<RconPacket> SendPacketAsync(RconPacket packet)
+		private async Task<string> SendPacketAsync(RconPacket packet, bool isMultiPacketResponse = false)
 		{
+			var packetDescription = new Operation(packet, isMultiPacketResponse);
+			operations.Enqueue(packetDescription);
 			await channel.SendAsync(packet.ToBytes());
-			var commandTask = new TaskCompletionSource<RconPacket>(TaskCreationOptions.RunContinuationsAsynchronously);
-			queuedCommands.Enqueue(commandTask);
-			return await commandTask.Task;
+			if (isMultiPacketResponse)
+			{
+				await channel.SendAsync(RconPacket.Dummy.Value.ToBytes());
+			}
+
+			return await packetDescription.TaskCompletionSource.Task;
+		}
+
+		private class Operation
+		{
+			public Operation(RconPacket originalRequest, bool isMultiPacketResponse)
+			{
+				OriginalRequest = originalRequest;
+				TaskCompletionSource = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+				IsMultiPacketResponse = isMultiPacketResponse;
+			}
+			public TaskCompletionSource<string> TaskCompletionSource { get; }
+			public RconPacket OriginalRequest { get; }
+			public bool IsMultiPacketResponse { get; }
+			private List<RconPacket> PacketsBuffer = new List<RconPacket>();
+			public void Add(RconPacket packet) => PacketsBuffer.Add(packet);
+			public string Body => string.Concat(PacketsBuffer.Select(b => b.Body));
 		}
 	}
 }
