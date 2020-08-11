@@ -1,10 +1,10 @@
 # rconsharp
 
-![Image of Yaktocat](https://github.com/stefanodriussi/rconsharp/blob/master/res/banner.png )
+![banner](https://github.com/stefanodriussi/rconsharp/blob/master/res/banner.png )
 
 rconsharp is a [Valve RCON](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol) protocol implementation for `netstandard`
 
-## Support
+## Games Support
 
 In theory all servers claiming to implement Valve's RCON protocol should be supported.
 In reality there are subtle differences in the way many developer chooses to interpret the protocol, leading to some unexpected result here and there.
@@ -16,6 +16,7 @@ The library has been tested successfully with:
 If you stumble upon a game that doesn't work for some reason, please fill an issue and I'll do my best to see what's wrong.
 
 ## Build
+![netstandard](https://github.com/stefanodriussi/rconsharp/workflows/netstandard/badge.svg)
 
 The easiest way to build rconsharp is by cloning the repo, open the solution file in Visual Studio and then build the proeject via `Build` menu
 Alternatively `dotnet CLI` can be used to achieve the same result (both Windows and Unix environments are supported)
@@ -79,6 +80,5 @@ This code is distributed under the very permissive MIT License but, if you use i
 ## Credits
 
 Thanks to 
-[Eucalyp](https://thenounproject.com/eucalyp) for the icon used in `rconsharp` logo
-
-[Universidade de Brasilia](http://www.marca.unb.br/introducao.php) for [unb_pro_black](http://www.marca.unb.br/fontesunb.php) font
+* [Eucalyp](https://thenounproject.com/eucalyp) for the icon used in `rconsharp` logo
+* [Universidade de Brasilia](http://www.marca.unb.br/introducao.php) for [unb_pro_black](http://www.marca.unb.br/fontesunb.php) font
