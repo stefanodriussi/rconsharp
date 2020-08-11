@@ -2,6 +2,17 @@
 
 rconsharp is a [Valve RCON](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol) protocol implementation for `netstandard`
 
+## Support
+
+In theory all servers claiming to implement Valve's RCON protocol should be supported.
+In reality there are subtle differences in the way many developer chooses to interpret the protocol, leading to some unexpected result here and there.
+The library has been tested successfully with:
+* CS:GO
+* Minecraft
+* ARK: Survival Evolved
+
+If you stumble upon a game that doesn't work for some reason, please fill an issue and I'll do my best to see what's wrong.
+
 ## Build
 
 The easiest way to build rconsharp is by cloning the repo, open the solution file in Visual Studio and then build the proeject via `Build` menu
