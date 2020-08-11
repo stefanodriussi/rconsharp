@@ -1,59 +1,63 @@
 # rconsharp
 
-rconsharp is a [Valve RCON](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol) protocol implementation for .NET written in C# as a Portable Class Library (PCL).
+rconsharp is a [Valve RCON](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol) protocol implementation for `netstandard`
 
-## Usage
+## Build
 
-Clone this repository and build the solution to get the assemblies. At this point of time, you can either reference the PCL and provide your custom implementation of `INetworkSocket` or reference the other projects (right now only .Net 4.5 is implemented).
-Due to the shared structure of PCLs it's not possible to have a common implementation of a network socket and this is the reason why a concrete class to handle network communication will be needed for each platform you need to target.
+The easiest way to build rconsharp is by cloning the repo, open the solution file in Visual Studio and then build the proeject via `Build` menu
+Alternatively `dotnet CLI` can be used to achieve the same result (both Windows and Unix environments are supported)
+```
+dotnet restore
+dotnet build --configuration Release --no-restore
+```
 
-### NuGet packages
+### Tests
 
-Instead of manually downloading binaries or building the sources, you can simply add it by installing the NuGet package. Just search for `rconsharp` from the package manager or type `PM> Install-Package RconSharp` in NuGet command line.
+A xUnit test project is included in this repository and covers most of the `rconsharp` API (feel free to submit a PR to improve coverage).
+All tests can be executed using Visual Studio runner with a nice report of all the results.
+As for the build process, the same result can be achieved using `dotnet CLI`
+```
+dotnet restore
+dotnet build --configuration Release --no-restore
+dotnet test --no-restore --verbosity normal
+```
+## NuGet packages
 
-There's also a package contining an implementation of `INetworkSocket` interface. Search for `rconsharp.socket` or type `PM> Install-Package RconSharp.Socket ` in NuGet command line.
-Currently only .net 4.5 is supported and as soon as i can find some spare time i will provide implementations for other platforms.
-
-## Quick example
-
-This is a very basic snippet that allows you to forward commands to a Rcon enabled remote server.
-(In order to run this example, you also need the package `RconSharp.Socket` to be installed from NuGet)
+A package is available via NuGet. Search for `RconSharp` via Visual Studio dependencies manager window or use NuGet Packet Manager CLI
 
 ```
-// create an instance of the socket. In this case i've used the .Net 4.5 object defined in the project
-INetworkSocket socket = new RconSocket();
+PM> Install-Package rconsharp
+```
 
-// create the RconMessenger instance and inject the socket
-RconMessenger messenger = new RconMessenger(socket);
+## Samples
 
-// initiate the connection with the remote server
-bool isConnected = await messenger.ConnectAsync("remotehost", 12345);
+### Authenticate and send a command
 
-// try to authenticate with your supersecretpassword (... obviously this is my hackerproof key, you shoul use yours)
-bool authenticated = await messenger.AuthenticateAsync("supersecretpassword");
+This is a very basic snippet that allows you to forward commands to a Rcon enabled remote server.
+
+```
+// Create an instance of RconClient pointing to an IP and a PORT
+var client = RconClient.Create("127.0.0.1", 15348);
+
+// Send a RCON packet with type AUTH and the RCON password for the target server
+var authenticated = await client.AuthenticateAsync("RCONPASSWORD");
 if (authenticated)
 {
-  // if we fall here, we're good to go! from this point on the connection is authenticated and you can send commands 
-  // to the server
-  var response = await messenger.ExecuteCommandAsync("/help");
+    // If the response is positive, the connection is authenticated and further commands can be sent
+    var status = await client.ExecuteCommandAsync("status");
+    // Some responses will be split into multiple RCON pakcets when body length exceeds the maximum allowed
+    // For this reason these commands needs to be issued with isMultiPacketResponse parameter set to true
+    // An example is CS:GO cvarlist
+    var cvarlist = await client.ExecuteCommandAsync("cvarlist", true);
 }
 ```
 
-Note: rconsharp is designed to work with the `async/await` paradigm. Nothing to be afraid of but remember you have to mark the encapsulating method with the `async` keyword and you have to `await` the `awaitable` methods in order to get the results. Refer to the [official documentation](http://msdn.microsoft.com/en-us/library/hh191443.aspx) if you wish to learn more on the subject.
+Please note that while `AuthenticateAsync` method call will always return `true` or `false`, a call to `ExecuteCommandAsync` could raise a `TaskCanceledException` in the event of a connection loss or timeout. You should surround the requesting code with a `try .. catch` block to properly handle these situations.
 
-### Dependencies
+## Updating from v1
 
-All the dependencies within this project are referenced as NuGet packages and will be restored upon first build (if you have this option enabled NuGet settings).
-Following is the list of referenced packages:
-* Microsoft Async
-* Microsoft BCL Build Components
-* Microsoft BCL Portability Pack
-* Moq (just for the tests)
-
-
-## Client example
-
-The minecraft client example has been moved to his own repository. You can find it [here](https://github.com/stefanodriussi/minecraft-remote-controller)
+The previous version of `netstandard` was built as a PCL and contained platform specific implementations for the actual `Socket` communication. The new version is an almost complete rewrite of the whole library and backward compatibility has not been preserved, sorry about that.
+The good news is that the API has been simplified, resulting in a fairly easy port. 
 
 ## Licensing
 
