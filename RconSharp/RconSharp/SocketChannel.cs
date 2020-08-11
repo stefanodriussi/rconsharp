@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
@@ -30,16 +28,27 @@ SOFTWARE.
 
 namespace RconSharp
 {
-	/// <summary>
-	/// Tcp implementation of <see cref="IChannel"/> interface
-	/// </summary>
-	public class SocketChannel : IChannel
+    /// <summary>
+    /// Tcp implementation of <see cref="IChannel"/> interface
+    /// </summary>
+    public class SocketChannel : IChannel
 	{
 		private Socket socket;
 		private string host;
 		private int port;
 		private int readTimeout;
 		private int writeTimeout;
+		/// <summary>
+		/// Class constructor
+		/// </summary>
+		/// <param name="host">Remote host address</param>
+		/// <param name="port">Remote host port</param>
+		/// <param name="readTimeout">Read timeout in millis. Default 5000</param>
+		/// <param name="writeTimeout">Write timeout in millis. Default 5000</param>
+		/// <exception cref="ArgumentException">Is thrown when host is null or empty</exception>
+		/// <exception cref="ArgumentException">Is thrown when port is less or equal than 0</exception>
+		/// <exception cref="ArgumentException">Is thrown when readTimeout is less than 0</exception>
+		/// <exception cref="ArgumentException">Is thrown when writeTimeout is less than 0</exception>
 		public SocketChannel(string host, int port, int readTimeout = 5000, int writeTimeout = 5000)
 		{
 			if (string.IsNullOrEmpty(host)) throw new ArgumentException("Invalid host name: must be a non null non empty string containing the host's address");
@@ -53,11 +62,11 @@ namespace RconSharp
 			this.readTimeout = readTimeout;
 			this.writeTimeout = writeTimeout;
 		}
+
 		/// <summary>
 		/// Connect the socket to the remote endpoint
 		/// </summary>
 		/// <returns>True if the connection was successfully; False if the connection is already estabilished</returns>
-		/// <exception cref="ArgumentException">is thrown when host parameter is null or empty, or when port parameter value is less than 1</exception>
 		public async Task ConnectAsync()
 		{
 			if (socket != null)
@@ -71,16 +80,29 @@ namespace RconSharp
 			await socket.ConnectAsync(host, port).ConfigureAwait(false);
 		}
 
+		/// <summary>
+		/// Write data on the the channel
+		/// </summary>
+		/// <param name="payload">Payload to be written</param>
+		/// <returns>Operation's Task</returns>
 		public async Task SendAsync(ReadOnlyMemory<byte> payload)
 		{
 			await socket.SendAsync(payload, SocketFlags.None).ConfigureAwait(false);
 		}
 
+		/// <summary>
+		/// Read data from the channel
+		/// </summary>
+		/// <param name="responseBuffer">Buffer to be filled</param>
+		/// <returns>Number of bytes read</returns>
 		public async Task<int> ReceiveAsync(Memory<byte> responseBuffer)
 		{
 			return await socket.ReceiveAsync(responseBuffer, SocketFlags.None).ConfigureAwait(false);
 		}
 
+		/// <summary>
+		/// Disconnect the channel
+		/// </summary>
 		public void Disconnect()
 		{
 			socket?.Close();
@@ -88,6 +110,9 @@ namespace RconSharp
 			socket = null;
 		}
 
+		/// <summary>
+		/// Get whether the channel is connected or not
+		/// </summary>
 		public bool IsConnected => socket?.Connected ?? false;
 	}
 }

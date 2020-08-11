@@ -34,10 +34,12 @@ namespace RconSharp
 	{
 
 		/// <summary>
-		/// Class constructor
+		/// Create a new RCON packet for a given type, with a content
 		/// </summary>
 		/// <param name="type">Packet Type</param>
 		/// <param name="content">Packet content</param>
+		/// <remarks>Packet Id is assigned automatically</remarks>
+		/// <returns>RCON Packet</returns>
 		public static RconPacket Create(PacketType type, string content)
 		{
 			return new RconPacket 
@@ -47,6 +49,25 @@ namespace RconSharp
 				Id = ProgressiveId.Next(),
 			};
 		}
+
+		/// <summary>
+		/// Create a new RCON packet for a given type, with a content and forcing a specific Id
+		/// </summary>
+		/// <param name="id">Packet Id</param>
+		/// <param name="type">Packet Type</param>
+		/// <param name="content">Packet content</param>
+		/// <returns>RCON Packet</returns>
+		public static RconPacket Create(int id, PacketType type, string content)
+		{
+			return new RconPacket
+			{
+				Type = type,
+				Body = string.IsNullOrEmpty(content) ? "\0" : content,
+				Id = id,
+			};
+		}
+
+		public static Lazy<RconPacket> Dummy { get; } = new Lazy<RconPacket>(() => new RconPacket { Id = 0, Type = PacketType.Response });
 
 		private RconPacket() { }
 
@@ -75,7 +96,7 @@ namespace RconSharp
 		/// <summary>
 		/// Gets the bytes composing this Packet as defined in RCON Protocol
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Packet bytes array</returns>
 		public byte[] ToBytes()
 		{
 			var body = Encoding.UTF8.GetBytes(Body + "\0"); // add null string terminator
@@ -109,5 +130,10 @@ namespace RconSharp
 				Id = BitConverter.ToInt32(buffer[4..8])
 			};
 		}
+
+		/// <summary>
+		/// Get whether this packet is a Dummy one (ie. the one sent as response after a multi packet response)
+		/// </summary>
+		public bool IsDummy => Body.Equals("\u0001") && Id == 0;
 	}
 }
