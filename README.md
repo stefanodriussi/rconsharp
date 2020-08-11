@@ -1,5 +1,7 @@
 # rconsharp
 
+![Image of Yaktocat](https://github.com/stefanodriussi/rconsharp/blob/master/res/banner.png )
+
 rconsharp is a [Valve RCON](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol) protocol implementation for `netstandard`
 
 ## Support
