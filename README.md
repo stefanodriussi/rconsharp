@@ -36,6 +36,8 @@ dotnet build --configuration Release --no-restore
 dotnet test --no-restore --verbosity normal
 ```
 ## NuGet packages
+[![Nuget](https://img.shields.io/nuget/dt/rconsharp)](https://www.nuget.org/packages/rconsharp/)
+[![Nuget](https://img.shields.io/nuget/v/rconsharp)](https://www.nuget.org/packages/rconsharp/)
 
 A package is available via NuGet. Search for `RconSharp` via Visual Studio dependencies manager window or use NuGet Packet Manager CLI
 
