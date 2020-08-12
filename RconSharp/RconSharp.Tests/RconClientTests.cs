@@ -28,15 +28,15 @@ namespace RconSharp.Tests
             channel.CancelNextReponse();
             var rconClient = RconClient.Create(channel);
             await rconClient.ConnectAsync();
-            var isConnectionClosed = false;
+            var tcs = new TaskCompletionSource<bool>();
             rconClient.ConnectionClosed += () =>
             {
-                isConnectionClosed = true;
+                tcs.SetResult(true);
             };
 
             // Act Assert
             await Assert.ThrowsAsync<TaskCanceledException>(() => rconClient.ExecuteCommandAsync("test echo"));
-            Assert.True(isConnectionClosed);
+            Assert.True(await tcs.Task);
         }
 
         [Theory]
