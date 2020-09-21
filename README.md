@@ -55,6 +55,9 @@ This is a very basic snippet that allows you to forward commands to a Rcon enabl
 // Create an instance of RconClient pointing to an IP and a PORT
 var client = RconClient.Create("127.0.0.1", 15348);
 
+// Open the connection
+await client.ConnectAsync();
+
 // Send a RCON packet with type AUTH and the RCON password for the target server
 var authenticated = await client.AuthenticateAsync("RCONPASSWORD");
 if (authenticated)
