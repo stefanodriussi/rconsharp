@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace RconSharp.Tests
@@ -50,7 +52,7 @@ namespace RconSharp.Tests
             await rconClient.ConnectAsync();
 
             // Act
-            var response = await rconClient.AuthenticateAsync(password);
+            var response = await rconClient.AuthenticateAsync(password, default);
 
             // Assert
             Assert.Equal(isAuthenticated, response);
@@ -69,6 +71,34 @@ namespace RconSharp.Tests
 
             // Assert
             Assert.Equal("This will be a very long message", response);
+        }
+
+        [Fact]
+        public async Task OperationsShouldThrowAfterTimeout()
+        {
+            var channel = new CuttableChannel();
+            var rconClient = RconClient.Create(channel);
+            CancellationTokenSource cts;
+            
+            // Cut before ConnectAsync
+            channel.CutConnection();
+            cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+            await Assert.ThrowsAsync<TaskCanceledException>(() => rconClient.ConnectAsync(cts.Token));
+            rconClient.Disconnect();
+            
+            // Cut before AuthenticateAsync
+            await rconClient.ConnectAsync();
+            channel.CutConnection();
+            cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+            await Assert.ThrowsAsync<TaskCanceledException>(() => rconClient.AuthenticateAsync("password", cts.Token));
+            rconClient.Disconnect();
+            
+            // Cut before ExecuteCommandAsync
+            await rconClient.ConnectAsync();
+            await rconClient.AuthenticateAsync("password");
+            channel.CutConnection();
+            cts = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+            await Assert.ThrowsAsync<TaskCanceledException>(() => rconClient.ExecuteCommandAsync("command", cancellationToken: cts.Token));
         }
     }
 }
