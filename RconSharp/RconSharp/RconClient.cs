@@ -182,7 +182,7 @@ namespace RconSharp
 		/// <returns>True if the connection has been authenticated; False elsewhere</returns>
 		/// <remarks>This method must be called prior to sending any other command</remarks>
 		/// <exception cref="ArgumentException">Is thrown if <paramref name="password"/> parameter is null or empty</exception>
-		public async Task<bool> AuthenticateAsync(string password, CancellationToken cancellationToken)
+		public async Task<bool> AuthenticateAsync(string password, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(password))
 				throw new ArgumentException("password parameter must be a non null non empty string");
