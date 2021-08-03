@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Security.Authentication;
+using System.Threading;
 using System.Threading.Tasks;
 
 /*
@@ -41,6 +42,7 @@ namespace RconSharp
 		private Pipe pipe = new Pipe();
 
 		private Queue<Operation> operations = new Queue<Operation>();
+		private CancellationTokenSource communicationTaskCts;
 		private Task communicationTask;
 		public event Action ConnectionClosed;
         public static RconClient Create(string host, int port) => new RconClient(new SocketChannel(host, port));
@@ -63,12 +65,13 @@ namespace RconSharp
 		/// Connect the socket to the remote endpoint
 		/// </summary>
 		/// <returns>True if the connection was successfull; False if a connection was already estabilished</returns>
-		public async Task ConnectAsync()
+		public async Task ConnectAsync(CancellationToken cancellationToken = default)
 		{
 			if (channel.IsConnected) return;
-			await channel.ConnectAsync();
-			var readingTask = ReadFromPipeAsync(pipe.Reader);
-			var writingTask = WriteToPipeAsync(pipe.Writer);
+			await channel.ConnectAsync(cancellationToken);
+			communicationTaskCts = new CancellationTokenSource();
+			var readingTask = ReadFromPipeAsync(pipe.Reader, communicationTaskCts.Token);
+			var writingTask = WriteToPipeAsync(pipe.Writer, communicationTaskCts.Token);
 			communicationTask = Task.WhenAll(readingTask, writingTask).ContinueWith(t =>
 			{
 				pipe.Reset();
@@ -80,16 +83,19 @@ namespace RconSharp
 			});
         }
 
-		public void Disconnect() => channel.Disconnect();
+		public void Disconnect() {
+			channel.Disconnect();
+			communicationTaskCts.Cancel();
+		}
 
-        private async Task WriteToPipeAsync(PipeWriter writer)
+        private async Task WriteToPipeAsync(PipeWriter writer, CancellationToken cancellationToken)
         {
 			while (true)
 			{
 				var buffer = writer.GetMemory(14);
 				try
 				{
-					var bytesCount = await channel.ReceiveAsync(buffer);
+					var bytesCount = await channel.ReceiveAsync(buffer, cancellationToken);
 					if (bytesCount == 0) break;
 
 					writer.Advance(bytesCount);
@@ -100,7 +106,7 @@ namespace RconSharp
 					break;
 				}
 
-				var flushResult = await writer.FlushAsync();
+				var flushResult = await writer.FlushAsync(cancellationToken);
 				if (flushResult.IsCompleted) break;
 
 			}
@@ -109,11 +115,17 @@ namespace RconSharp
 			//client is disconnected
         }
 
-		private async Task ReadFromPipeAsync(PipeReader reader)
+		private async Task ReadFromPipeAsync(PipeReader reader, CancellationToken cancellationToken)
 		{
 			while (true)
 			{
-				var readResult = await reader.ReadAsync();
+				var readResult = await reader.ReadAsync(cancellationToken);
+
+				if (readResult.IsCanceled)
+				{
+					break;
+				}
+				
 				var buffer = readResult.Buffer;
 				var startPosition = buffer.Start;
 				if (buffer.Length < 4) // not enough bytes to get the packet length, need to read more
@@ -166,10 +178,11 @@ namespace RconSharp
 		/// Send the proper authentication packet and parse the response
 		/// </summary>
 		/// <param name="password">Current server password</param>
+		/// <param name="cancellationToken">The cancellation token for the operation</param>
 		/// <returns>True if the connection has been authenticated; False elsewhere</returns>
 		/// <remarks>This method must be called prior to sending any other command</remarks>
 		/// <exception cref="ArgumentException">Is thrown if <paramref name="password"/> parameter is null or empty</exception>
-		public async Task<bool> AuthenticateAsync(string password)
+		public async Task<bool> AuthenticateAsync(string password, CancellationToken cancellationToken)
 		{
 			if (string.IsNullOrEmpty(password))
 				throw new ArgumentException("password parameter must be a non null non empty string");
@@ -177,33 +190,35 @@ namespace RconSharp
 			var authPacket = RconPacket.Create(PacketType.Auth, password);
 			try
 			{
-				var response = await SendPacketAsync(authPacket);
+				_ = await SendPacketAsync(authPacket, false, cancellationToken);
 			}
-			catch (AuthenticationException ex)
+			catch (AuthenticationException)
 			{
 				return false;
 			}
 			return true;
 		}
 
-		public Task<string> ExecuteCommandAsync(string command, bool isMultiPacketResponse = false)
+		public Task<string> ExecuteCommandAsync(string command, bool isMultiPacketResponse = false, CancellationToken cancellationToken = default)
 		{
-			return SendPacketAsync(RconPacket.Create(PacketType.ExecCommand, command), isMultiPacketResponse);
+			return SendPacketAsync(RconPacket.Create(PacketType.ExecCommand, command), isMultiPacketResponse, cancellationToken);
 		}
 
 		/// <summary>
 		/// Send a message encapsulated into an Rcon packet and get the response
 		/// </summary>
 		/// <param name="packet">Packet to be sent</param>
+		/// <param name="isMultiPacketResponse">True if the response will consist of multiple packets</param>
+		/// <param name="cancellationToken">The cancellation token for the operation</param>
 		/// <returns>The response to this command</returns>
-		private async Task<string> SendPacketAsync(RconPacket packet, bool isMultiPacketResponse = false)
+		private async Task<string> SendPacketAsync(RconPacket packet, bool isMultiPacketResponse, CancellationToken cancellationToken)
 		{
 			var packetDescription = new Operation(packet, isMultiPacketResponse);
 			operations.Enqueue(packetDescription);
-			await channel.SendAsync(packet.ToBytes());
+			await channel.SendAsync(packet.ToBytes(), cancellationToken);
 			if (isMultiPacketResponse)
 			{
-				await channel.SendAsync(RconPacket.Dummy.Value.ToBytes());
+				await channel.SendAsync(RconPacket.Dummy.Value.ToBytes(), cancellationToken);
 			}
 
 			return await packetDescription.TaskCompletionSource.Task;
