@@ -25,6 +25,7 @@ SOFTWARE.
 
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RconSharp
@@ -38,7 +39,7 @@ namespace RconSharp
 		/// Connect the socket to the remote endpoint
 		/// </summary>
 		/// <returns>True if the connection was successfully; False if the connection is already estabilished</returns>
-		Task ConnectAsync();
+		Task ConnectAsync(CancellationToken cancellationToken);
 		/// <summary>
 		/// Disconnect the channel
 		/// </summary>
@@ -48,13 +49,13 @@ namespace RconSharp
 		/// </summary>
 		/// <param name="payload">Payload to be written</param>
 		/// <returns>Operation's Task</returns>
-		Task SendAsync(ReadOnlyMemory<byte> payload);
+		Task SendAsync(ReadOnlyMemory<byte> payload, CancellationToken cancellationToken);
 		/// <summary>
 		/// Read data from the channel
 		/// </summary>
 		/// <param name="responseBuffer">Buffer to be filled</param>
 		/// <returns>Number of bytes read</returns>
-		Task<int> ReceiveAsync(Memory<byte> responseBuffer);
+		Task<int> ReceiveAsync(Memory<byte> responseBuffer, CancellationToken cancellationToken);
 		/// <summary>
 		/// Get whether the channel is connected or not
 		/// </summary>

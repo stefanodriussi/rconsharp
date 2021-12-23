@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RconSharp.Tests
@@ -22,7 +23,7 @@ namespace RconSharp.Tests
             private set;
         }
 
-        public Task ConnectAsync()
+        public Task ConnectAsync(CancellationToken cancellationToken)
         {
             IsConnected = true;
             return Task.CompletedTask;
@@ -33,7 +34,7 @@ namespace RconSharp.Tests
             IsConnected = false;
         }
 
-        public async Task<int> ReceiveAsync(Memory<byte> responseBuffer)
+        public async Task<int> ReceiveAsync(Memory<byte> responseBuffer, CancellationToken cancellationToken)
         {
             var pendingCommand = await Task.Run(() => incomingRequests.Take());
             if (cancelNextReponse) throw new Exception("Canceled");
@@ -43,7 +44,7 @@ namespace RconSharp.Tests
         }
         private BlockingCollection<RconPacket> incomingRequests = new BlockingCollection<RconPacket>();
 
-        public Task SendAsync(ReadOnlyMemory<byte> payload)
+        public Task SendAsync(ReadOnlyMemory<byte> payload, CancellationToken cancellationToken)
         {
             incomingRequests.Add(RconPacket.FromBytes(payload.ToArray()));
             return Task.CompletedTask;

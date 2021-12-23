@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 /*
@@ -67,7 +68,7 @@ namespace RconSharp
 		/// Connect the socket to the remote endpoint
 		/// </summary>
 		/// <returns>True if the connection was successfully; False if the connection is already estabilished</returns>
-		public async Task ConnectAsync()
+		public async Task ConnectAsync(CancellationToken cancellationToken)
 		{
 			if (socket != null)
 				return;
@@ -77,7 +78,7 @@ namespace RconSharp
             socket.SendTimeout = 5000;
             socket.NoDelay = true;
 
-			await socket.ConnectAsync(host, port).ConfigureAwait(false);
+			await socket.ConnectAsync(host, port, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -85,9 +86,9 @@ namespace RconSharp
 		/// </summary>
 		/// <param name="payload">Payload to be written</param>
 		/// <returns>Operation's Task</returns>
-		public async Task SendAsync(ReadOnlyMemory<byte> payload)
+		public async Task SendAsync(ReadOnlyMemory<byte> payload, CancellationToken cancellationToken)
 		{
-			await socket.SendAsync(payload, SocketFlags.None).ConfigureAwait(false);
+			await socket.SendAsync(payload, SocketFlags.None, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -95,9 +96,9 @@ namespace RconSharp
 		/// </summary>
 		/// <param name="responseBuffer">Buffer to be filled</param>
 		/// <returns>Number of bytes read</returns>
-		public async Task<int> ReceiveAsync(Memory<byte> responseBuffer)
+		public async Task<int> ReceiveAsync(Memory<byte> responseBuffer, CancellationToken cancellationToken)
 		{
-			return await socket.ReceiveAsync(responseBuffer, SocketFlags.None).ConfigureAwait(false);
+			return await socket.ReceiveAsync(responseBuffer, SocketFlags.None, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RconSharp.Tests
@@ -12,7 +13,7 @@ namespace RconSharp.Tests
             private set;
         }
 
-        public Task ConnectAsync()
+        public Task ConnectAsync(CancellationToken cancellationToken)
         {
             IsConnected = true;
             return Task.CompletedTask;
@@ -23,14 +24,14 @@ namespace RconSharp.Tests
             IsConnected = false;
         }
 
-        public async Task<int> ReceiveAsync(Memory<byte> responseBuffer)
+        public async Task<int> ReceiveAsync(Memory<byte> responseBuffer, CancellationToken cancellationToken)
         {
             var pendingResponse = await Task.Run(() => pendingResponses.Take());
             pendingResponse.CopyTo(responseBuffer);
             return pendingResponse.Length;
         }
 
-        public Task SendAsync(ReadOnlyMemory<byte> payload)
+        public Task SendAsync(ReadOnlyMemory<byte> payload, CancellationToken cancellationToken)
         {
             var request = RconPacket.FromBytes(payload.ToArray());
             switch (request.Type)
