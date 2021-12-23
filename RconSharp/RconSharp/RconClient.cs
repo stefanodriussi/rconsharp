@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Security.Authentication;
+using System.Text;
 using System.Threading.Tasks;
 
 /*
@@ -40,6 +41,8 @@ namespace RconSharp
 		private IChannel channel;
 		private Pipe pipe = new Pipe();
 
+		private Encoding encoding;
+
 		private Queue<Operation> operations = new Queue<Operation>();
 		private Task communicationTask;
 		public event Action ConnectionClosed;
@@ -54,6 +57,13 @@ namespace RconSharp
 			if (channel == null)
 				throw new NullReferenceException("channel parameter must be an instance of a class implementing INetworkSocket inteface");
 			this.channel = channel;
+			encoding = Encoding.UTF8;
+		}
+
+		public RconClient WithEncoding(Encoding encoding)
+		{
+			this.encoding = encoding;
+			return this;
 		}
 
 		public string Host { get; private set; }
@@ -128,7 +138,7 @@ namespace RconSharp
 				if (buffer.Length >= packetSize + 4)
 				{
 					var endPosition = buffer.GetPosition(packetSize + 4, startPosition);
-					var rconPacket = RconPacket.FromBytes(buffer.Slice(startPosition, endPosition).ToArray());
+					var rconPacket = RconPacket.FromBytes(buffer.Slice(startPosition, endPosition).ToArray(), encoding);
 					if (!rconPacket.IsDummy)
 					{
 						var currentOperation = operations.Peek();
@@ -179,7 +189,7 @@ namespace RconSharp
 			{
 				var response = await SendPacketAsync(authPacket);
 			}
-			catch (AuthenticationException ex)
+			catch (AuthenticationException)
 			{
 				return false;
 			}
@@ -200,10 +210,10 @@ namespace RconSharp
 		{
 			var packetDescription = new Operation(packet, isMultiPacketResponse);
 			operations.Enqueue(packetDescription);
-			await channel.SendAsync(packet.ToBytes());
+			await channel.SendAsync(packet.ToBytes(encoding));
 			if (isMultiPacketResponse)
 			{
-				await channel.SendAsync(RconPacket.Dummy.Value.ToBytes());
+				await channel.SendAsync(RconPacket.Dummy.Value.ToBytes(encoding));
 			}
 
 			return await packetDescription.TaskCompletionSource.Task;
