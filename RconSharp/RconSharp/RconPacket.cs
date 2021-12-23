@@ -94,12 +94,19 @@ namespace RconSharp
 		public string Body { get; private set; }
 
 		/// <summary>
-		/// Gets the bytes composing this Packet as defined in RCON Protocol
+		/// Gets the bytes composing this Packet as defined in RCON Protocol using the default UTF8 encoding
 		/// </summary>
 		/// <returns>Packet bytes array</returns>
-		public byte[] ToBytes()
+		public byte[] ToBytes() => ToBytes(Encoding.UTF8);
+
+		/// <summary>
+		/// Gets the bytes composing this Packet as defined in RCON Protocol using a custom encoding
+		/// </summary>
+		/// <param name="encoding">Encoding</param>
+		/// <returns>Packet bytes array</returns>
+		public byte[] ToBytes(Encoding encoding)
 		{
-			var body = Encoding.UTF8.GetBytes(Body + "\0"); // add null string terminator
+			var body = encoding.GetBytes(Body + "\0"); // add null string terminator
 			var buffer = new byte[12 + body.Length + 1]; // 12 bytes for Length, Id and Type
 			var span = buffer.AsSpan();
 			body.CopyTo(span[12..]);
@@ -110,12 +117,21 @@ namespace RconSharp
 		}
 
 		/// <summary>
-		/// Create a new RconPacket from a byte array
+		/// Create a new RconPacket from a byte array using the default UTF8 encoding
 		/// </summary>
 		/// <param name="buffer">Input buffer</param>
 		/// <returns>Parsed RconPacket</returns>
 		/// <exception cref="System.ArgumentException">When buffer is null or its size is less than 14</exception>
-		public static RconPacket FromBytes(byte[] buffer)
+		public static RconPacket FromBytes(byte[] buffer) => FromBytes(buffer, Encoding.UTF8);
+
+		/// <summary>
+		/// Create a new RconPacket from a byte array using a custom encoding
+		/// </summary>
+		/// <param name="buffer">Input buffer</param>
+		/// <param name="encoding">Encoding</param>
+		/// <returns>Parsed RconPacket</returns>
+		/// <exception cref="System.ArgumentException">When buffer is null or its size is less than 14</exception>
+		public static RconPacket FromBytes(byte[] buffer, Encoding encoding)
 		{
 			if (buffer == null) throw new ArgumentNullException("Input buffer parameter cannot be null");
 			if (buffer.Length < 4) throw new ArgumentException("Input buffer parameter lenght is less than minimum required of 4 bytes");
@@ -126,7 +142,7 @@ namespace RconSharp
 			return new RconPacket()
 			{
 				Type = (PacketType)BitConverter.ToInt32(buffer[8..12]),
-				Body = Encoding.UTF8.GetString(buffer[12..]).Replace("\0", ""),
+				Body = encoding.GetString(buffer[12..]).Replace("\0", ""),
 				Id = BitConverter.ToInt32(buffer[4..8])
 			};
 		}
